@@ -21,7 +21,7 @@ class CategoriesController {
           }
         });
       });
-  
+
       if (!result) {
         return ResponseHandler.errorResponse(
           res,
@@ -57,6 +57,29 @@ class CategoriesController {
       ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
     }
   }
+
+  //get category from parent id
+
+  async getCategoryByParentId(req, res) {
+    try {
+      const result = await Categories.getCategoryByParentId(req.body.parent_id);
+      if (!result) {
+        return ResponseHandler.errorResponse(
+          res,
+          400,
+          MSGConst.SOMETHING_WRONG,
+          []
+        );
+      }
+      if (result) {
+        return ResponseHandler.successResponse(res, 200, "", result);
+      }
+    } catch (e) {
+      console.log(e);
+      ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
+    }
+  }
+
   // Add new Categories.
   async addCategory(req, res) {
     try {
@@ -65,11 +88,11 @@ class CategoriesController {
         .notEmpty()
         .withMessage("Please enter category name.")
         .isLength({ max: 50 })
-        .withMessage("name length less then 50 char")
+        .withMessage("name length less then 50 char");
       req
         .checkBody("description")
         .notEmpty()
-        .withMessage("Please enter category description.")
+        .withMessage("Please enter category description.");
       req
         .checkBody("parent_id")
         .notEmpty()
@@ -122,13 +145,13 @@ class CategoriesController {
         .notEmpty()
         .withMessage("Please enter category name.")
         .isLength({ max: 50 })
-        .withMessage("name length less then 50 char")
-        
+        .withMessage("name length less then 50 char");
+
       req
         .checkBody("description")
         .notEmpty()
-        .withMessage("Please enter category description.")
-    
+        .withMessage("Please enter category description.");
+
       req
         .checkBody("parent_id")
         .notEmpty()

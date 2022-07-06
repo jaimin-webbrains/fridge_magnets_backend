@@ -29,7 +29,6 @@ class ProductsController {
 
   //Edit Product
   async getEditProduct(req, res) {
-    console.log(req.body, "rreq.body");
     try {
       const result = await Products.getEditProduct(req.body);
 
@@ -241,7 +240,6 @@ class ProductsController {
   async deleteProduct(req, res) {
     try {
       const result = await Products.deleteProduct(req.body.id);
-
       if (!result) {
         return ResponseHandler.errorResponse(
           res,
