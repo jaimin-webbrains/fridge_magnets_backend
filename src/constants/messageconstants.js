@@ -35,3 +35,5 @@ module.exports.PRODUCT_EXIST = "Product is Already Exist ";
 module.exports.PRODUCT_ADD = "Product is Added ";
 module.exports.PRODUCT_UPDATE = "Product is Updated ";
 module.exports.PRODUCT_DELETE = "Product is deleted";
+
+module.exports.SETTING_UPDATE = "Setting is Updated ";
