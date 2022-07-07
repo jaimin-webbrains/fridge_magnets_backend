@@ -9,14 +9,13 @@ const CreateProductTable = require("./CreateProductTable");
 const CreateProductBrandsTable = require("./CreateProductBrandsTable");
 const AlterProductTable = require("./AlterProductTable");
 const AlterProductAttributeTable = require("./AlterProductAttributeTable");
-
+const CreateSettingTable = require("./CreateSettingTable");
 class Migrations {
     constructor() {}
 
     async migrate(req, res) {
         await CreateMigrationTable.create();
         await CreateCategoriesTable.create();
-        await CreateBrandTable.create();
         await CreatePaperTable.create();
         await CreateSizeTable.create();
         await CreateMarkerTable.create();
@@ -25,6 +24,7 @@ class Migrations {
         await CreateProductBrandsTable.create();
         await AlterProductTable.create();
         await AlterProductAttributeTable.create();
+        await CreateSettingTable.create();
 
         res.send(["Migrated"]);
     }

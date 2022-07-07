@@ -12,6 +12,7 @@ const SizesRoutes = require("./routes/sizes");
 const PapersRoutes = require("./routes/papers");
 const MarkersRoutes = require("./routes/markers");
 const ProductsRoutes = require("./routes/products");
+const settingController = require("./routes/setting");
 // const productBrandsRoutes = require("./routes/productBrands");
 
 const path = require("path");
@@ -48,6 +49,7 @@ app.use(SizesRoutes);
 app.use(PapersRoutes);
 app.use(MarkersRoutes);
 app.use(ProductsRoutes);
+app.use(settingController);
 // app.use(productBrandsRoutes);
 
 app.use("/", express.static(__dirname.replace("/src", "") + "/Public"));
