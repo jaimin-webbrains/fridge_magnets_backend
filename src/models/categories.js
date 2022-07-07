@@ -17,7 +17,7 @@ class Categories {
     }
   }
 
-  // Fetching all parent categories.
+  // Fetching all parent categories.  
   async getParentCategories() {
     try {
       const [rows_categories, fields] = await connectPool.query(
@@ -30,13 +30,20 @@ class Categories {
       throw new Error(e);
     }
   }
-
+  
   //getParentCategories
   async getCategoryByParentId(id) {
     try {
       const [rows_categories, fields] = await connectPool.query(
         `SELECT * FROM categories where parent_id = ?`,[id]
       );
+
+      // const [rows_categories_id, fields_id] = await connectPool.query(
+      //   `SELECT * FROM categories where id = ?`,[id]
+      // );
+
+      // const cateories = [...rows_categories_id,...rows_categories];
+      console.log("rows_categories",rows_categories)
 
       return rows_categories;
     } catch (e) {

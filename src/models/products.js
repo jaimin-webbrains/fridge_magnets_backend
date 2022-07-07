@@ -46,8 +46,6 @@ class Products {
         [input.product_name]
       );
 
-      // console.log("addProductcbxfcbxdfhzsvdjcgjkA>Sgxj",input.brands)
-
       if (rows_products.length === 0) {
         let productsData = {
           product_name: input.product_name,
@@ -57,6 +55,8 @@ class Products {
           paper_type_id: input.paper_type_id,
           size_id: input.size_id,
           marker_id: input.marker_id,
+          product_quantity:input.product_quantity,
+          SKU:input.SKU,
           product_image: filesArr?.product_image[0]?.filename,
           show_on_home_page: parseInt(input.show_on_home_page),
         };
@@ -70,7 +70,6 @@ class Products {
         const brands = JSON.parse(input.brands);
         const brandImages = filesArr.brand_image;
         while (s < brands.length) {
-          console.log(brands[0].brand_id, brands.length);
 
           let brandsData = {};
 
@@ -104,7 +103,7 @@ class Products {
 
   // Updating product by its id.
   async updateProduct(input, id, filesArr) {
-    console.log("input", input);
+    console.log("inpuy",input)
 
     try {
       const [rows_products, fields] = await connectPool.query(
@@ -138,9 +137,12 @@ class Products {
           paper_type_id = ?,
           marker_id = ?,
           product_image = ?,
+          product_quantity = ?,
+          SKU = ?,
           show_on_home_page = ?,
           updated_at = ? 
           WHERE id = ?`,
+         
           [
             input.product_name,
             input.category_id,
@@ -150,6 +152,8 @@ class Products {
             input.paper_type_id,
             input.marker_id,
             product_image,
+            input.product_quantity,
+            input.SKU,
             parseInt(input.show_on_home_page),
             getCurrentTime(),
             id,
@@ -178,7 +182,7 @@ class Products {
                   : brands[s].brandimg,
               show_on_homepage: brands[s].show_on_homepage,
             };
-            console.log(brandsData, "brandsData");
+
             const [update_status, fields2] = await connectPool.query(
               `UPDATE productBrands SET 
             brand_id = ?,
@@ -195,7 +199,6 @@ class Products {
               ]
             );
           } else {
-            console.log(imageName);
             brandsData = {
               product_id: id,
               brand_id: brands[s].brand_id,
