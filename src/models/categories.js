@@ -30,12 +30,45 @@ class Categories {
       throw new Error(e);
     }
   }
+  async getIdFromSlug(slug) {
+    try {
+      const [rows_categories, fields] = await connectPool.query(
+        `SELECT id FROM categories where slug = ? limit 1`,
+        [slug]
+      );
+      if (rows_categories.length == 1) {
+        return rows_categories[0].id;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      console.log(e);
+      throw new Error(e);
+    }
+  }
+
+  async getProductsFromCategoryID(slug) {
+    try {
+      var catrgory_id = this.getIdFromSlug(slug);
+
+      const [rows_categories, fields] = await connectPool.query(
+        `SELECT * FROM categories where parent_id = ?`,
+        [id]
+      );
+
+      return rows_categories;
+    } catch (e) {
+      console.log(e);
+      throw new Error(e);
+    }
+  }
 
   //getParentCategories
   async getCategoryByParentId(id) {
     try {
       const [rows_categories, fields] = await connectPool.query(
-        `SELECT * FROM categories where parent_id = ?`,[id]
+        `SELECT * FROM categories where parent_id = ?`,
+        [id]
       );
 
       return rows_categories;
@@ -56,7 +89,11 @@ class Categories {
       if (rows_categories.length === 0) {
         const [rows, fields] = await connectPool.query(
           "INSERT INTO categories set ? ",
-          { ...input, created_at: getCurrentTime() }
+          {
+            ...input,
+            slug: input.name.replace(" ", "-"),
+            created_at: getCurrentTime(),
+          }
         );
         return rows;
       }
@@ -86,13 +123,15 @@ class Categories {
                     name = ?,
                     description = ?,
                     parent_id = ?,
-                    updated_at = ? 
+                    updated_at = ?,
+                    slug = ? 
                     WHERE id = ?`,
             [
               input.name,
               input.description,
               input.parent_id,
               getCurrentTime(),
+              input.name.replace(" ", "-"),
               input.id,
             ]
           );

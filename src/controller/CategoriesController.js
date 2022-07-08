@@ -57,6 +57,29 @@ class CategoriesController {
       ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
     }
   }
+  async getProductsFromCategoryID(req, res) {
+    console.log(req.params.slug);
+    // console.log(req.body);
+    try {
+      const result = await Categories.getProductsFromCategoryID(
+        req.params.slug
+      );
+      if (!result) {
+        return ResponseHandler.errorResponse(
+          res,
+          400,
+          MSGConst.SOMETHING_WRONG,
+          []
+        );
+      }
+      if (result) {
+        return ResponseHandler.successResponse(res, 200, "", result);
+      }
+    } catch (e) {
+      console.log(e);
+      ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
+    }
+  }
 
   //get category from parent id
 
