@@ -14,6 +14,7 @@ const MarkersRoutes = require("./routes/markers");
 const ProductsRoutes = require("./routes/products");
 const settingController = require("./routes/setting");
 // const productBrandsRoutes = require("./routes/productBrands");
+const InquiryController = require("./routes/inquiry");
 
 const path = require("path");
 
@@ -50,6 +51,8 @@ app.use(PapersRoutes);
 app.use(MarkersRoutes);
 app.use(ProductsRoutes);
 app.use(settingController);
+app.use(InquiryController);
+
 // app.use(productBrandsRoutes);
 
 app.use("/", express.static(__dirname.replace("/src", "") + "/Public"));

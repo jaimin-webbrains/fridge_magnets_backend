@@ -37,3 +37,5 @@ module.exports.PRODUCT_UPDATE = "Product is Updated ";
 module.exports.PRODUCT_DELETE = "Product is deleted";
 
 module.exports.SETTING_UPDATE = "Setting is Updated ";
+
+module.exports.INQUIRY_ADD = "Inquiry is Added ";

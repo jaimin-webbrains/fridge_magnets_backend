@@ -261,6 +261,28 @@ class ProductsController {
       ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
     }
   }
+
+  async getProductBySlug(req, res) {
+    // console.log(req.params.slug);
+    try {
+      const result = await Products.getProductBySlug(req.params.slug);
+
+      if (!result) {
+        return ResponseHandler.errorResponse(
+          res,
+          400,
+          MSGConst.SOMETHING_WRONG,
+          []
+        );
+      }
+      if (result) {
+        return ResponseHandler.successResponse(res, 200, "", result);
+      }
+    } catch (e) {
+      console.log(e);
+      ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
+    }
+  }
 }
 
 module.exports = new ProductsController();

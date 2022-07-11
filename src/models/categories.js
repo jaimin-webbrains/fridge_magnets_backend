@@ -30,38 +30,6 @@ class Categories {
       throw new Error(e);
     }
   }
-  async getIdFromSlug(slug) {
-    try {
-      const [rows_categories, fields] = await connectPool.query(
-        `SELECT id FROM categories where slug = ? limit 1`,
-        [slug]
-      );
-      if (rows_categories.length == 1) {
-        return rows_categories[0].id;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      console.log(e);
-      throw new Error(e);
-    }
-  }
-
-  async getProductsFromCategoryID(slug) {
-    try {
-      var catrgory_id = this.getIdFromSlug(slug);
-
-      const [rows_categories, fields] = await connectPool.query(
-        `SELECT * FROM categories where parent_id = ?`,
-        [id]
-      );
-
-      return rows_categories;
-    } catch (e) {
-      console.log(e);
-      throw new Error(e);
-    }
-  }
 
   //getParentCategories
   async getCategoryByParentId(id) {
@@ -70,6 +38,13 @@ class Categories {
         `SELECT * FROM categories where parent_id = ?`,
         [id]
       );
+
+      // const [rows_categories_id, fields_id] = await connectPool.query(
+      //   `SELECT * FROM categories where id = ?`,[id]
+      // );
+
+      // const cateories = [...rows_categories_id,...rows_categories];
+      console.log("rows_categories", rows_categories);
 
       return rows_categories;
     } catch (e) {

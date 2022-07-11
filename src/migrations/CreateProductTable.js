@@ -24,6 +24,7 @@ class CreateProductTable {
                         created_at DATETIME NOT NULL ,
                         updated_at DATETIME DEFAULT NULL , 
                         PRIMARY KEY (id)) ENGINE = InnoDB; `
+                       
                 );
 
               

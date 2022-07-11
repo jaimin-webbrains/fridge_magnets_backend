@@ -5,7 +5,6 @@ const CategoriesController = require("../controller/CategoriesController");
 
 router.get("/categories/list", CategoriesController.getCategories);
 router.get("/categories/parent-list", CategoriesController.getParentCategories);
-router.get("/categories/:slug", CategoriesController.getProductsFromCategoryID);
 router.post(
   "/categories/cat-parentId",
   CategoriesController.getCategoryByParentId

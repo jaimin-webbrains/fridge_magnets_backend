@@ -1,4 +1,4 @@
-const { getCurrentTime } = require("../helpers/helpers");
+const { getCurrentTime, getIdFromSlug } = require("../helpers/helpers");
 
 class Products {
   constructor() {}
@@ -38,6 +38,27 @@ class Products {
     }
   }
 
+  async getProductBySlug(slug) {
+    const category_id = await getIdFromSlug(slug);
+
+    try {
+      // if (category_id !== "") {
+      const [rows_products, fields] = await connectPool.query(
+        `SELECT p.*,s.size,c.name FROM products as p
+        LEFT JOIN sizes as s ON p.size_id = s.id 
+        LEFT JOIN categories as c ON p.parent_category_id = c.id  
+        where p.category_id = ?`,
+        [category_id]
+      );
+      // }
+      // console.log(rows_products);
+      return rows_products;
+    } catch (e) {
+      console.log(e);
+      throw new Error(e);
+    }
+  }
+
   // Add new Products.
   async addProduct(input, filesArr) {
     try {
@@ -45,8 +66,6 @@ class Products {
         `SELECT product_name from products WHERE product_name = ? LIMIT 1`,
         [input.product_name]
       );
-
-      // console.log("addProductcbxfcbxdfhzsvdjcgjkA>Sgxj",input.brands)
 
       if (rows_products.length === 0) {
         let productsData = {
@@ -57,6 +76,8 @@ class Products {
           paper_type_id: input.paper_type_id,
           size_id: input.size_id,
           marker_id: input.marker_id,
+          product_quantity: input.product_quantity,
+          SKU: input.SKU,
           product_image: filesArr?.product_image[0]?.filename,
           show_on_home_page: parseInt(input.show_on_home_page),
         };
@@ -70,8 +91,6 @@ class Products {
         const brands = JSON.parse(input.brands);
         const brandImages = filesArr.brand_image;
         while (s < brands.length) {
-          console.log(brands[0].brand_id, brands.length);
-
           let brandsData = {};
 
           if (brands) {
@@ -104,7 +123,7 @@ class Products {
 
   // Updating product by its id.
   async updateProduct(input, id, filesArr) {
-    console.log("input", input);
+    console.log("inpuy", input);
 
     try {
       const [rows_products, fields] = await connectPool.query(
@@ -138,9 +157,12 @@ class Products {
           paper_type_id = ?,
           marker_id = ?,
           product_image = ?,
+          product_quantity = ?,
+          SKU = ?,
           show_on_home_page = ?,
           updated_at = ? 
           WHERE id = ?`,
+
           [
             input.product_name,
             input.category_id,
@@ -150,6 +172,8 @@ class Products {
             input.paper_type_id,
             input.marker_id,
             product_image,
+            input.product_quantity,
+            input.SKU,
             parseInt(input.show_on_home_page),
             getCurrentTime(),
             id,
@@ -178,7 +202,7 @@ class Products {
                   : brands[s].brandimg,
               show_on_homepage: brands[s].show_on_homepage,
             };
-            console.log(brandsData, "brandsData");
+
             const [update_status, fields2] = await connectPool.query(
               `UPDATE productBrands SET 
             brand_id = ?,
@@ -195,7 +219,6 @@ class Products {
               ]
             );
           } else {
-            console.log(imageName);
             brandsData = {
               product_id: id,
               brand_id: brands[s].brand_id,
