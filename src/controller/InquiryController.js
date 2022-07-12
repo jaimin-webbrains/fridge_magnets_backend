@@ -9,7 +9,10 @@ class InquiryController {
     console.log(req.body);
     try {
       req.checkBody("name").notEmpty().withMessage("Please enter name.");
-      req.checkBody("quntity").notEmpty().withMessage("Please select quntity.");
+      req
+        .checkBody("quantity")
+        .notEmpty()
+        .withMessage("Please select quntity.");
       req.checkBody("email").notEmpty().withMessage("Please enter email.");
       req
         .checkBody("company")
@@ -23,7 +26,7 @@ class InquiryController {
         .checkBody("postcode")
         .notEmpty()
         .withMessage("Please enter postcode.");
-      // req.checkBody("artwork").notEmpty().withMessage("Please select artwork.");
+      req.checkBody("artwork").notEmpty().withMessage("Please select artwork.");
 
       const errors = req.validationErrors();
       if (errors) {

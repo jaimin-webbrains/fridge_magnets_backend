@@ -44,9 +44,10 @@ class Products {
     try {
       // if (category_id !== "") {
       const [rows_products, fields] = await connectPool.query(
-        `SELECT p.*,s.size,c.name FROM products as p
+        `SELECT p.*,s.size,c.name,c1.name as parent_Category_name FROM products as p
         LEFT JOIN sizes as s ON p.size_id = s.id 
-        LEFT JOIN categories as c ON p.parent_category_id = c.id  
+        LEFT JOIN categories as c ON p.category_id = c.id  
+        LEFT JOIN categories as c1 ON p.parent_category_id = c1.id  
         where p.category_id = ?`,
         [category_id]
       );
