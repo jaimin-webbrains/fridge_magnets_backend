@@ -25,7 +25,7 @@ class Sizes {
         
         try {
             const [rows_sizes, fields] = await connectPool.query(
-                `SELECT size from sizes WHERE size = ? LIMIT 1`,
+                `SELECT id,size from sizes WHERE size = ? LIMIT 1`,
                 [input.size]
             );
 

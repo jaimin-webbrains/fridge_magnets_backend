@@ -25,7 +25,7 @@ class Brands {
         
         try {
             const [rows_brands, fields] = await connectPool.query(
-                `SELECT name from brands WHERE name = ? LIMIT 1`,
+                `SELECT id,name from brands WHERE name = ? LIMIT 1`,
                 [input.name]
             );
 

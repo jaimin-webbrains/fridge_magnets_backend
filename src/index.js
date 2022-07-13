@@ -13,7 +13,8 @@ const PapersRoutes = require("./routes/papers");
 const MarkersRoutes = require("./routes/markers");
 const ProductsRoutes = require("./routes/products");
 const settingController = require("./routes/setting");
-// const productBrandsRoutes = require("./routes/productBrands");
+const NewsController = require("./routes/news")
+
 
 const path = require("path");
 
@@ -22,6 +23,11 @@ const port = process.env.PORT || 3000;
 app.use(expressValidator());
 app.use(cors());
 app.use("/uploads", express.static(__dirname.replace("/src", "") + "/uploads"));
+app.use(
+  "/CSV_Files",
+  express.static(__dirname.replace("/src", "") + "/CSV_Files")
+);
+
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
   res.header(
@@ -50,7 +56,8 @@ app.use(PapersRoutes);
 app.use(MarkersRoutes);
 app.use(ProductsRoutes);
 app.use(settingController);
-// app.use(productBrandsRoutes);
+app.use(NewsController)
+
 
 app.use("/", express.static(__dirname.replace("/src", "") + "/Public"));
 app.get("*", (req, res) => {

@@ -25,7 +25,7 @@ class Markers {
         
         try {
             const [rows_markers, fields] = await connectPool.query(
-                `SELECT marker from markers WHERE marker = ? LIMIT 1`,
+                `SELECT id,marker from markers WHERE marker = ? LIMIT 1`,
                 [input.marker]
             );
 

@@ -11,7 +11,43 @@ class Products {
         `SELECT * FROM products order by id desc`
       );
 
+      // const [rows_products_join, fields_join] = await connectPool.query(
+      //   `SELECT p.*,s.size,cl.color,pp.paper,m.marker,c.name as category_name ,c1.name as parent_category_name FROM products as p 
+      //   LEFT JOIN sizes as s ON p.size_id = s.id
+      //   LEFT JOIN colors as cl ON p.color_id = cl.id
+      //   LEFT JOIN papers as pp ON p.paper_type_id = pp.id
+      //   LEFT JOIN markers as m ON p.marker_id = m.id
+      //   LEFT JOIN categories as c ON p.category_id = c.id
+      //   LEFT JOIN categories as c1 ON p.parent_category_id = c1.id
+      //   `,
+      // );
+     
+      // console.log("rows_products_join",rows_products_join,rows_products)
+
       return rows_products;
+    } catch (e) {
+      console.log(e);
+      throw new Error(e);
+    }
+  }
+
+  async getProductsTable () {
+    try {
+      
+      const [rows_products_join, fields_join] = await connectPool.query(
+        `SELECT p.*,s.size,cl.color,pp.paper,m.marker,c.name as category_name ,c1.name as parent_category_name FROM products as p 
+        LEFT JOIN sizes as s ON p.size_id = s.id
+        LEFT JOIN colors as cl ON p.color_id = cl.id
+        LEFT JOIN papers as pp ON p.paper_type_id = pp.id
+        LEFT JOIN markers as m ON p.marker_id = m.id
+        LEFT JOIN categories as c ON p.category_id = c.id
+        LEFT JOIN categories as c1 ON p.parent_category_id = c1.id
+        `,
+      );
+     
+      // console.log("rows_products_join",rows_products_join,rows_products)
+
+      return rows_products_join;
     } catch (e) {
       console.log(e);
       throw new Error(e);
@@ -39,7 +75,7 @@ class Products {
   }
 
   // Add new Products.
-  async addProduct(input, filesArr) {
+  async addProduct(input, filesArr , ids) {
     try {
       const [rows_products, fields] = await connectPool.query(
         `SELECT product_name from products WHERE product_name = ? LIMIT 1`,
@@ -49,17 +85,17 @@ class Products {
       if (rows_products.length === 0) {
         let productsData = {
           product_name: input.product_name,
-          category_id: input.category_id,
+          category_id: ids.category_insertId!==""? ids.category_insertId: input.category_id,
           parent_category_id: input.parent_category_id,
-          color_id: input.color_id,
-          paper_type_id: input.paper_type_id,
-          size_id: input.size_id,
-          marker_id: input.marker_id,
+          color_id:  ids.color_insertId!==""? ids.color_insertId : input.color_id,
+          paper_type_id: ids.paper_type_insertId!==""? ids.paper_type_insertId :input.paper_type_id,
+          size_id: ids.size_insertId!==""? ids.size_insertId : input.size_id,
+          marker_id: ids.marker_insertId!==""? ids.marker_insertId : input.marker_id,
           product_quantity:input.product_quantity,
           SKU:input.SKU,
           product_image: filesArr?.product_image[0]?.filename,
           show_on_home_page: parseInt(input.show_on_home_page),
-        };
+        }
 
         const [rows, fields] = await connectPool.query(
           "INSERT INTO products set ? ",
@@ -93,7 +129,6 @@ class Products {
 
         return rows;
       }
-
       return rows_products;
     } catch (e) {
       console.log(e);
@@ -102,9 +137,8 @@ class Products {
   }
 
   // Updating product by its id.
-  async updateProduct(input, id, filesArr) {
-    console.log("inpuy",input)
-
+  async updateProduct(input, id, filesArr,ids) {
+ 
     try {
       const [rows_products, fields] = await connectPool.query(
         `SELECT id from products WHERE id = ? LIMIT 1`,
@@ -145,12 +179,12 @@ class Products {
          
           [
             input.product_name,
-            input.category_id,
+            ids.category_insertId !== ""?ids.category_insertId: input.category_id,
             input.parent_category_id,
-            input.color_id,
-            input.size_id,
-            input.paper_type_id,
-            input.marker_id,
+            ids.color_insertId !== ""?ids.color_insertId   :input.color_id,
+            ids.size_insertId !== ""?ids.size_insertId     :input.size_id,
+            ids.paper_type_insertId !== ""?ids.paper_type_insertId :input.paper_type_id,
+            ids.marker_insertId !== ""?ids.marker_insertId :input.marker_id,
             product_image,
             input.product_quantity,
             input.SKU,
@@ -226,11 +260,16 @@ class Products {
           );
           i++;
         }
+   
+
         return rows;
       }
     } catch (e) {
+
       console.log(e);
+      
       throw new Error(e);
+
     }
   }
 

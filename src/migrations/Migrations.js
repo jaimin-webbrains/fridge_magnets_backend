@@ -10,6 +10,7 @@ const CreateProductBrandsTable = require("./CreateProductBrandsTable");
 const AlterProductTable = require("./AlterProductTable");
 const AlterProductAttributeTable = require("./AlterProductAttributeTable");
 const CreateSettingTable = require("./CreateSettingTable");
+const CreateNewsTable = require("./CreateNewsTable");
 class Migrations {
     constructor() {}
 
@@ -25,6 +26,9 @@ class Migrations {
         await AlterProductTable.create();
         await AlterProductAttributeTable.create();
         await CreateSettingTable.create();
+        await CreateNewsTable.create();
+
+        
 
         res.send(["Migrated"]);
     }

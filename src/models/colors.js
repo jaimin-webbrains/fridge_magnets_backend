@@ -25,7 +25,7 @@ class Colors {
         
         try {
             const [rows_colors, fields] = await connectPool.query(
-                `SELECT color from colors WHERE color = ? LIMIT 1`,
+                `SELECT id,color from colors WHERE color = ? LIMIT 1`,
                 [input.color]
             );
 

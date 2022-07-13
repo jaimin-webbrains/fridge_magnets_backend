@@ -81,14 +81,16 @@ class CategoriesController {
   }
 
   // Add new Categories.
-  async addCategory(req, res) {
+  async addCategory(req,res) {
+
     try {
+      
       req
         .checkBody("name")
         .notEmpty()
         .withMessage("Please enter category name.")
-        .isLength({ max: 50 })
-        .withMessage("name length less then 50 char");
+        .isLength({ max: 100 })
+        .withMessage("name length less then 100 char");
       req
         .checkBody("description")
         .notEmpty()

@@ -1,5 +1,6 @@
 const { getCurrentTime } = require("../helpers/helpers");
 
+
 class Categories {
   constructor() {}
 
@@ -38,13 +39,6 @@ class Categories {
         `SELECT * FROM categories where parent_id = ?`,[id]
       );
 
-      // const [rows_categories_id, fields_id] = await connectPool.query(
-      //   `SELECT * FROM categories where id = ?`,[id]
-      // );
-
-      // const cateories = [...rows_categories_id,...rows_categories];
-      console.log("rows_categories",rows_categories)
-
       return rows_categories;
     } catch (e) {
       console.log(e);
@@ -56,9 +50,10 @@ class Categories {
   async addCategory(input) {
     try {
       const [rows_categories, fields] = await connectPool.query(
-        `SELECT name from categories WHERE name = ? LIMIT 1`,
+        `SELECT name,id from categories WHERE name = ? LIMIT 1`,
         [input.name]
       );
+      // console.log(rows_categories,"rows_categories")
 
       if (rows_categories.length === 0) {
         const [rows, fields] = await connectPool.query(
