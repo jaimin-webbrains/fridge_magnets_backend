@@ -5,7 +5,27 @@ const inquiry = require("../models/inquiry");
 class InquiryController {
   constructor() {}
 
-  async addInquiry(req, res) {
+  async getInquiries(req,res) {
+    try {
+      const result = await inquiry.getInquiries();
+
+      if (!result) {
+        return ResponseHandler.errorResponse(
+          res,
+          400,
+          MSGConst.SOMETHING_WRONG,
+          []
+        );
+      }
+      if (result) {
+        return ResponseHandler.successResponse(res, 200, "", result);
+      }
+    } catch (e) {
+      console.log(e);
+      ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
+    }
+  }
+  async   addInquiry(req, res) {
     console.log(req.body);
     try {
       req.checkBody("name").notEmpty().withMessage("Please enter name.");
