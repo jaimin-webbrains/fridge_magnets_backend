@@ -61,7 +61,7 @@ class Categories {
           "INSERT INTO categories set ? ",
           {
             ...input,
-            slug: input.name.replace(" ", "-"),
+            slug: input.name.replace(" ", "-").toLowerCase(),
             created_at: getCurrentTime(),
           }
         );
@@ -101,7 +101,7 @@ class Categories {
               input.description,
               input.parent_id,
               getCurrentTime(),
-              input.name.replace(" ", "-"),
+              input.name.replace(" ", "-").toLowerCase(),
               input.id,
             ]
           );

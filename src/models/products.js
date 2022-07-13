@@ -1,179 +1,220 @@
 const { getCurrentTime, getIdFromSlug } = require("../helpers/helpers");
 
 class Products {
-  constructor() {}
+    constructor() {}
 
-  // Fetching all products.
+    // Fetching all products.
 
-  async getProducts() {
-    try {
-      const [rows_products, fields] = await connectPool.query(
-        `SELECT * FROM products order by id desc`
-      );
+    async getProducts() {
+        try {
+            const [rows_products, fields] = await connectPool.query(
+                `SELECT * FROM products order by id desc`
+            );
 
-      return rows_products;
-    } catch (e) {
-      console.log(e);
-      throw new Error(e);
+            return rows_products;
+        } catch (e) {
+            console.log(e);
+            throw new Error(e);
+        }
     }
-  }
 
-  async getProductsTable () {
-    try {
-      
-      const [rows_products_join, fields_join] = await connectPool.query(
-        `SELECT p.*,s.size,cl.color,pp.paper,m.marker,c.name as category_name ,c1.name as parent_category_name FROM products as p 
+    async getProductsTable() {
+        try {
+            const [rows_products_join, fields_join] = await connectPool.query(
+                `SELECT p.*,s.size,cl.color,pp.paper,m.marker,c.name as category_name ,c1.name as parent_category_name FROM products as p 
         LEFT JOIN sizes as s ON p.size_id = s.id
         LEFT JOIN colors as cl ON p.color_id = cl.id
         LEFT JOIN papers as pp ON p.paper_type_id = pp.id
         LEFT JOIN markers as m ON p.marker_id = m.id
         LEFT JOIN categories as c ON p.category_id = c.id
         LEFT JOIN categories as c1 ON p.parent_category_id = c1.id
-        `,
-      );
-     
-      // console.log("rows_products_join",rows_products_join,rows_products)
+        `
+            );
 
-      return rows_products_join;
-    } catch (e) {
-      console.log(e);
-      throw new Error(e);
+            // console.log("rows_products_join",rows_products_join,rows_products)
+
+            return rows_products_join;
+        } catch (e) {
+            console.log(e);
+            throw new Error(e);
+        }
     }
-  }
-
-  async getEditProduct(input) {
-    try {
-      const [rows_products, fields] = await connectPool.query(
-        `SELECT * FROM products  WHERE id = ? LIMIT 1`,
-        [input.id]
-      );
-      const [rows_productbrands, fieldsVal] = await connectPool.query(
-        `SELECT * from productBrands WHERE product_id = ?`,
-        [input.id]
-      );
-
-      rows_products[0].brands = rows_productbrands;
-
-      return rows_products[0];
-    } catch (e) {
-      console.log(e);
-      throw new Error(e);
-    }
-  }
-
-  async getProductBySlug(slug) {
-    const category_id = await getIdFromSlug(slug);
-
-    try {
-      // if (category_id !== "") {
-      const [rows_products, fields] = await connectPool.query(
-        `SELECT p.*,s.size,c.name,c1.name as parent_Category_name FROM products as p
+    async getBrandProducts(slug, brand) {
+        const category_id = await getIdFromSlug(slug);
+        try {
+            const [rows_prouctbrand, fields1] = await connectPool.query(
+                `SELECT id FROM brands where name = ? limit 1`,
+                [brand]
+            );
+            const brand_id = rows_prouctbrand[0].id;
+            const [rows_products, fields] = await connectPool.query(
+                `SELECT p.*,s.size,c.name,c.description,p1.show_on_homepage,p1.brandimg,c1.name as parent_category_name
+        FROM products as p
         LEFT JOIN sizes as s ON p.size_id = s.id 
         LEFT JOIN categories as c ON p.category_id = c.id  
-        LEFT JOIN categories as c1 ON p.parent_category_id = c1.id  
+        LEFT JOIN categories as c1 ON p.parent_category_id = c1.id 
+        LEFT JOIN productBrands as p1 ON p.id = p1.product_id 
+        where p.category_id = ? and p1.brand_id = ? and p1.show_on_homepage = ?`,
+                [category_id, brand_id, 1]
+            );
+            // console.log(rows_products);
+            return rows_products;
+        } catch (e) {
+            console.log(e);
+            throw new Error(e);
+        }
+    }
+
+    async getEditProduct(input) {
+        try {
+            const [rows_products, fields] = await connectPool.query(
+                `SELECT * FROM products  WHERE id = ? LIMIT 1`,
+                [input.id]
+            );
+            const [rows_productbrands, fieldsVal] = await connectPool.query(
+                `SELECT * from productBrands WHERE product_id = ?`,
+                [input.id]
+            );
+
+            rows_products[0].brands = rows_productbrands;
+
+            return rows_products[0];
+        } catch (e) {
+            console.log(e);
+            throw new Error(e);
+        }
+    }
+
+    async getProductBySlug(slug) {
+        const category_id = await getIdFromSlug(slug);
+
+        try {
+            // if (category_id !== "") {
+            const [rows_products, fields] = await connectPool.query(
+                `SELECT p.*,s.size,c.name,c.description,c.slug,p1.brandimg,b.name as brand_name,c1.name as parent_category_name FROM products as p
+        LEFT JOIN sizes as s ON p.size_id = s.id 
+        LEFT JOIN categories as c ON p.category_id = c.id  
+        LEFT JOIN categories as c1 ON p.parent_category_id = c1.id 
+        LEFT JOIN productBrands as p1 ON p.id = p1.product_id 
+        LEFT JOIN brands as b ON p1.brand_id = b.id  
         where p.category_id = ?`,
-        [category_id]
-      );
-      // }
-      // console.log(rows_products);
-      return rows_products;
-    } catch (e) {
-      console.log(e);
-      throw new Error(e);
+                [category_id]
+            );
+            // }
+            // console.log(rows_products);
+            return rows_products;
+        } catch (e) {
+            console.log(e);
+            throw new Error(e);
+        }
     }
-  }
 
-  // Add new Products.
-  async addProduct(input, filesArr , ids) {
-    try {
-      // const ans=ids.category_insertId?ids.category_insertId:input.category_id
-      const [rows_products, fields] = await connectPool.query(
-        `SELECT product_name from products WHERE product_name = ?  LIMIT 1`,
-        [input.product_name ]
-      );
-      console.log("rows_products",rows_products)
+    // Add new Products.
+    async addProduct(input, filesArr, ids) {
+        try {
+            // const ans=ids.category_insertId?ids.category_insertId:input.category_id
+            const [rows_products, fields] = await connectPool.query(
+                `SELECT product_name from products WHERE product_name = ?  LIMIT 1`,
+                [input.product_name]
+            );
+            console.log("rows_products", rows_products);
 
-      if (rows_products.length === 0) {
-        let productsData = {
-          product_name: input.product_name,
-          category_id: ids.category_insertId!==""? ids.category_insertId: input.category_id,
-          parent_category_id: input.parent_category_id,
-          color_id:  ids.color_insertId!==""? ids.color_insertId : input.color_id,
-          paper_type_id: ids.paper_type_insertId!==""? ids.paper_type_insertId :input.paper_type_id,
-          size_id: ids.size_insertId!==""? ids.size_insertId : input.size_id,
-          marker_id: ids.marker_insertId!==""? ids.marker_insertId : input.marker_id,
-          product_quantity:input.product_quantity,
-          SKU:input.SKU,
-          product_image: filesArr?.product_image[0]?.filename,
-          show_on_home_page: parseInt(input.show_on_home_page),
+            if (rows_products.length === 0) {
+                let productsData = {
+                    product_name: input.product_name,
+                    category_id:
+                        ids.category_insertId !== ""
+                            ? ids.category_insertId
+                            : input.category_id,
+                    parent_category_id: input.parent_category_id,
+                    color_id:
+                        ids.color_insertId !== ""
+                            ? ids.color_insertId
+                            : input.color_id,
+                    paper_type_id:
+                        ids.paper_type_insertId !== ""
+                            ? ids.paper_type_insertId
+                            : input.paper_type_id,
+                    size_id:
+                        ids.size_insertId !== ""
+                            ? ids.size_insertId
+                            : input.size_id,
+                    marker_id:
+                        ids.marker_insertId !== ""
+                            ? ids.marker_insertId
+                            : input.marker_id,
+                    product_quantity: input.product_quantity,
+                    SKU: input.SKU,
+                    product_image: filesArr?.product_image[0]?.filename,
+                    show_on_home_page: parseInt(input.show_on_home_page),
+                };
+
+                const [rows, fields] = await connectPool.query(
+                    "INSERT INTO products set ? ",
+                    { ...productsData, created_at: getCurrentTime() }
+                );
+
+                let s = 0;
+                const brands = JSON.parse(input.brands);
+                const brandImages = filesArr.brand_image;
+                while (s < brands.length) {
+                    let brandsData = {};
+
+                    if (brands) {
+                        brandsData = {
+                            product_id: rows.insertId,
+                            brand_id: brands[s].brand_id,
+                            brandimg: brandImages[s].filename,
+                            // brandimg: filename,
+                            show_on_homepage: brands[s].show_on_homepage,
+                            // position: s + 1,
+                            created_at: getCurrentTime(),
+                        };
+                    }
+                    const [insert_status, fields2] = await connectPool.query(
+                        `INSERT into productBrands SET ?`,
+                        brandsData
+                    );
+                    s++;
+                }
+
+                return rows;
+            }
+            return rows_products;
+        } catch (e) {
+            console.log(e);
+            throw new Error(e);
         }
-
-        const [rows, fields] = await connectPool.query(
-          "INSERT INTO products set ? ",
-          { ...productsData, created_at: getCurrentTime() }
-        );
-
-        let s = 0;
-        const brands = JSON.parse(input.brands);
-        const brandImages = filesArr.brand_image;
-        while (s < brands.length) {
-          let brandsData = {};
-
-          if (brands) {
-            brandsData = {
-              product_id: rows.insertId,
-              brand_id: brands[s].brand_id,
-              brandimg: brandImages[s].filename,
-              // brandimg: filename,
-              show_on_homepage: brands[s].show_on_homepage,
-              // position: s + 1,
-              created_at: getCurrentTime(),
-            };
-          }
-          const [insert_status, fields2] = await connectPool.query(
-            `INSERT into productBrands SET ?`,
-            brandsData
-          );
-          s++;
-        }
-
-        return rows;
-      }
-      return rows_products;
-    } catch (e) {
-      console.log(e);
-      throw new Error(e);
     }
-  }
 
-  // Updating product by its id.
-  async updateProduct(input, id, filesArr,ids) {
- 
-    try {
-      const [rows_products, fields] = await connectPool.query(
-        `SELECT id from products WHERE id = ? LIMIT 1`,
-        [id]
-      );
+    // Updating product by its id.
+    async updateProduct(input, id, filesArr, ids) {
+        try {
+            const [rows_products, fields] = await connectPool.query(
+                `SELECT id from products WHERE id = ? LIMIT 1`,
+                [id]
+            );
 
-      if (rows_products.length === 1) {
-        const [rows_products_exist, fields_exist] = await connectPool.query(
-          `SELECT product_name from products WHERE product_name = '${input.product_name}' and id != ? LIMIT 1`,
-          [id]
-        );
-        if (rows_products_exist.length === 1) {
-          return rows_products_exist;
-        }
-        var product_image = input.product_image;
-        if (
-          filesArr !== undefined &&
-          filesArr.product_image !== undefined &&
-          filesArr.product_image[0] !== undefined
-        ) {
-          product_image = filesArr?.product_image[0]?.filename;
-        }
+            if (rows_products.length === 1) {
+                const [rows_products_exist, fields_exist] =
+                    await connectPool.query(
+                        `SELECT product_name from products WHERE product_name = '${input.product_name}' and id != ? LIMIT 1`,
+                        [id]
+                    );
+                if (rows_products_exist.length === 1) {
+                    return rows_products_exist;
+                }
+                var product_image = input.product_image;
+                if (
+                    filesArr !== undefined &&
+                    filesArr.product_image !== undefined &&
+                    filesArr.product_image[0] !== undefined
+                ) {
+                    product_image = filesArr?.product_image[0]?.filename;
+                }
 
-        const [rows, fields] = await connectPool.query(
-          `UPDATE products set  product_name = ?,
+                const [rows, fields] = await connectPool.query(
+                    `UPDATE products set  product_name = ?,
           category_id = ?,
           parent_category_id = ?,
           color_id = ?,
@@ -187,134 +228,147 @@ class Products {
           updated_at = ? 
           WHERE id = ?`,
 
-          [
-            input.product_name,
-            ids.category_insertId !== ""?ids.category_insertId: input.category_id,
-            input.parent_category_id,
-            ids.color_insertId !== ""?ids.color_insertId   :input.color_id,
-            ids.size_insertId !== ""?ids.size_insertId     :input.size_id,
-            ids.paper_type_insertId !== ""?ids.paper_type_insertId :input.paper_type_id,
-            ids.marker_insertId !== ""?ids.marker_insertId :input.marker_id,
-            product_image,
-            input.product_quantity,
-            input.SKU,
-            parseInt(input.show_on_home_page),
-            getCurrentTime(),
-            id,
-          ]
-        );
+                    [
+                        input.product_name,
+                        ids.category_insertId !== ""
+                            ? ids.category_insertId
+                            : input.category_id,
+                        input.parent_category_id,
+                        ids.color_insertId !== ""
+                            ? ids.color_insertId
+                            : input.color_id,
+                        ids.size_insertId !== ""
+                            ? ids.size_insertId
+                            : input.size_id,
+                        ids.paper_type_insertId !== ""
+                            ? ids.paper_type_insertId
+                            : input.paper_type_id,
+                        ids.marker_insertId !== ""
+                            ? ids.marker_insertId
+                            : input.marker_id,
+                        product_image,
+                        input.product_quantity,
+                        input.SKU,
+                        parseInt(input.show_on_home_page),
+                        getCurrentTime(),
+                        id,
+                    ]
+                );
 
-        let brandsData = {};
+                let brandsData = {};
 
-        let s = 0;
-        const brands = JSON.parse(input.brands);
-        const brandImages = filesArr?.brand_image;
-        while (s < brands.length) {
-          var imageName;
-          if (brandImages?.length > 0) {
-            imageName = brandImages.find(
-              (x) => x.originalname === brands[s].brandimg
-            );
-          }
-          if (brands[s].id !== undefined) {
-            brandsData = {
-              id: brands[s].id,
-              brand_id: brands[s].brand_id,
-              brandimg:
-                imageName && imageName?.filename
-                  ? imageName.filename
-                  : brands[s].brandimg,
-              show_on_homepage: brands[s].show_on_homepage,
-            };
+                let s = 0;
+                const brands = JSON.parse(input.brands);
+                const brandImages = filesArr?.brand_image;
+                while (s < brands.length) {
+                    var imageName;
+                    if (brandImages?.length > 0) {
+                        imageName = brandImages.find(
+                            (x) => x.originalname === brands[s].brandimg
+                        );
+                    }
+                    if (brands[s].id !== undefined) {
+                        brandsData = {
+                            id: brands[s].id,
+                            brand_id: brands[s].brand_id,
+                            brandimg:
+                                imageName && imageName?.filename
+                                    ? imageName.filename
+                                    : brands[s].brandimg,
+                            show_on_homepage: brands[s].show_on_homepage,
+                        };
 
-            const [update_status, fields2] = await connectPool.query(
-              `UPDATE productBrands SET 
+                        const [update_status, fields2] =
+                            await connectPool.query(
+                                `UPDATE productBrands SET 
             brand_id = ?,
             brandimg = ?,
             show_on_homepage = ?,
             updated_at = ? 
             WHERE id = ?`,
-              [
-                brandsData.brand_id,
-                brandsData.brandimg,
-                brandsData.show_on_homepage,
-                getCurrentTime(),
-                brandsData.id,
-              ]
-            );
-          } else {
-            brandsData = {
-              product_id: id,
-              brand_id: brands[s].brand_id,
-              brandimg: imageName && imageName?.filename && imageName.filename,
-              // brandimg: filename,
-              show_on_homepage: brands[s].show_on_homepage,
-              // position: s + 1,
-              created_at: getCurrentTime(),
-            };
+                                [
+                                    brandsData.brand_id,
+                                    brandsData.brandimg,
+                                    brandsData.show_on_homepage,
+                                    getCurrentTime(),
+                                    brandsData.id,
+                                ]
+                            );
+                    } else {
+                        brandsData = {
+                            product_id: id,
+                            brand_id: brands[s].brand_id,
+                            brandimg:
+                                imageName &&
+                                imageName?.filename &&
+                                imageName.filename,
+                            // brandimg: filename,
+                            show_on_homepage: brands[s].show_on_homepage,
+                            // position: s + 1,
+                            created_at: getCurrentTime(),
+                        };
 
-            const [insert_status, fields2] = await connectPool.query(
-              `INSERT into productBrands SET ?`,
-              brandsData
-            );
-          }
-          s++;
+                        const [insert_status, fields2] =
+                            await connectPool.query(
+                                `INSERT into productBrands SET ?`,
+                                brandsData
+                            );
+                    }
+                    s++;
+                }
+
+                const val = JSON.parse(input.deleted_brands);
+                let i = 0;
+                while (i < val.length) {
+                    const [deleteBrands, fields_delete] =
+                        await connectPool.query(
+                            `DELETE from productBrands WHERE id = ? LIMIT 1`,
+                            [val[i]]
+                        );
+                    i++;
+                }
+
+                return rows;
+            }
+        } catch (e) {
+            console.log(e);
+
+            throw new Error(e);
         }
-
-        const val = JSON.parse(input.deleted_brands);
-        let i = 0;
-        while (i < val.length) {
-          const [deleteBrands, fields_delete] = await connectPool.query(
-            `DELETE from productBrands WHERE id = ? LIMIT 1`,
-            [val[i]]
-          );
-          i++;
-        }
-   
-
-        return rows;
-      }
-    } catch (e) {
-
-      console.log(e);
-      
-      throw new Error(e);
-
     }
-  }
 
-  // Delete product by its id.
-  async deleteProduct(id) {
-    try {
-      const [rows_products, fields] = await connectPool.query(
-        `SELECT id from products WHERE id = ? LIMIT 1`,
-        [id]
-      );
+    // Delete product by its id.
+    async deleteProduct(id) {
+        try {
+            const [rows_products, fields] = await connectPool.query(
+                `SELECT id from products WHERE id = ? LIMIT 1`,
+                [id]
+            );
 
-      if (rows_products.length === 1) {
-        const [rows, updateFields] = await connectPool.query(
-          `DELETE FROM products 
+            if (rows_products.length === 1) {
+                const [rows, updateFields] = await connectPool.query(
+                    `DELETE FROM products 
                     WHERE id = ?`,
-          [id]
-        );
+                    [id]
+                );
 
-        if (rows) {
-          const [rows_delete, updateFields] = await connectPool.query(
-            `DELETE FROM productBrands 
+                if (rows) {
+                    const [rows_delete, updateFields] = await connectPool.query(
+                        `DELETE FROM productBrands 
                       WHERE product_id  = ?`,
-            [id]
-          );
+                        [id]
+                    );
 
-          return rows_delete;
+                    return rows_delete;
+                }
+                return rows;
+            }
+            return rows_products;
+        } catch (e) {
+            console.log(e);
+            throw new Error(e);
         }
-        return rows;
-      }
-      return rows_products;
-    } catch (e) {
-      console.log(e);
-      throw new Error(e);
     }
-  }
 }
 
 module.exports = new Products();
