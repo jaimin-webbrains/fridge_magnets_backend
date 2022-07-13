@@ -12,7 +12,7 @@ class CreateSettingTable {
       if (rows.length == 0) {
         const [create, fields_create] = await connectPool.query(
           `CREATE TABLE setting ( id INT NOT NULL AUTO_INCREMENT , 
-                      phone_no INT NOT NULL ,
+                      phone_no VARCHAR(20),
                       email VARCHAR(50) NOT NULL ,
                       logo VARCHAR(50) NOT NULL,
                       artwork_label1 VARCHAR(50) NOT NULL ,
@@ -25,7 +25,7 @@ class CreateSettingTable {
         const [insert_categories, fields] = await connectPool.query(
           `INSERT INTO setting SET ?`,
           {
-            phone_no: "",
+            phone_no: null,
             email: "",
             logo: "",
             artwork_label1: "",
