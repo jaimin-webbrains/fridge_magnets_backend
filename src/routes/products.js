@@ -7,6 +7,14 @@ router.get("/products/list", ProductsController.getProducts);
 router.post("/product/getById", ProductsController.getEditProduct);
 router.get("/product/getProduct/:slug", ProductsController.getProductBySlug);
 router.get(
+  "/product/categories/:slug/:brand",
+  ProductsController.getBrandProducts
+);
+router.get(
+  "/product/printing-products/:slug/:brand",
+  ProductsController.getBrandProducts
+);
+router.get(
   "/product/printing-products/:slug",
   ProductsController.getProductBySlug
 );

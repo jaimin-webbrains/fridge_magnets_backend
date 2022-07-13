@@ -27,6 +27,8 @@ class ProductsController {
     }
   }
 
+  //Fetching all product brand wise
+
   //Edit Product
   async getEditProduct(req, res) {
     try {
@@ -263,9 +265,31 @@ class ProductsController {
   }
 
   async getProductBySlug(req, res) {
-    // console.log(req.params.slug);
     try {
       const result = await Products.getProductBySlug(req.params.slug);
+
+      if (!result) {
+        return ResponseHandler.errorResponse(
+          res,
+          400,
+          MSGConst.SOMETHING_WRONG,
+          []
+        );
+      }
+      if (result) {
+        return ResponseHandler.successResponse(res, 200, "", result);
+      }
+    } catch (e) {
+      console.log(e);
+      ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
+    }
+  }
+  async getBrandProducts(req, res) {
+    try {
+      const result = await Products.getBrandProducts(
+        req.params.slug,
+        req.params.brand
+      );
 
       if (!result) {
         return ResponseHandler.errorResponse(

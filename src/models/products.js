@@ -18,6 +18,32 @@ class Products {
     }
   }
 
+  async getBrandProducts(slug, brand) {
+    const category_id = await getIdFromSlug(slug);
+    try {
+      const [rows_prouctbrand, fields1] = await connectPool.query(
+        `SELECT id FROM brands where name = ? limit 1`,
+        [brand]
+      );
+      const brand_id = rows_prouctbrand[0].id;
+      const [rows_products, fields] = await connectPool.query(
+        `SELECT p.*,s.size,c.name,c.description,p1.show_on_homepage,p1.brandimg,c1.name as parent_category_name
+        FROM products as p
+        LEFT JOIN sizes as s ON p.size_id = s.id 
+        LEFT JOIN categories as c ON p.category_id = c.id  
+        LEFT JOIN categories as c1 ON p.parent_category_id = c1.id 
+        LEFT JOIN productBrands as p1 ON p.id = p1.product_id 
+        where p.category_id = ? and p1.brand_id = ? and p1.show_on_homepage = ?`,
+        [category_id, brand_id, 1]
+      );
+      // console.log(rows_products);
+      return rows_products;
+    } catch (e) {
+      console.log(e);
+      throw new Error(e);
+    }
+  }
+
   async getEditProduct(input) {
     try {
       const [rows_products, fields] = await connectPool.query(
@@ -44,10 +70,12 @@ class Products {
     try {
       // if (category_id !== "") {
       const [rows_products, fields] = await connectPool.query(
-        `SELECT p.*,s.size,c.name,c1.name as parent_Category_name FROM products as p
+        `SELECT p.*,s.size,c.name,c.description,c.slug,p1.brandimg,b.name as brand_name,c1.name as parent_category_name FROM products as p
         LEFT JOIN sizes as s ON p.size_id = s.id 
         LEFT JOIN categories as c ON p.category_id = c.id  
-        LEFT JOIN categories as c1 ON p.parent_category_id = c1.id  
+        LEFT JOIN categories as c1 ON p.parent_category_id = c1.id 
+        LEFT JOIN productBrands as p1 ON p.id = p1.product_id 
+        LEFT JOIN brands as b ON p1.brand_id = b.id  
         where p.category_id = ?`,
         [category_id]
       );
