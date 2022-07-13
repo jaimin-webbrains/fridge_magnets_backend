@@ -6,6 +6,7 @@ const multerStorage = multer.diskStorage({
     console.log("file", file);
     if (
       file.fieldname === "logo" ||
+      file.fieldname === "news_image" ||
       //   file.fieldname === "customer_files" ||
       //   file.fieldname === "customer_images" ||
       //   file.fieldname === "customer_docs"||
@@ -45,6 +46,19 @@ exports.upload = multer({
         return cb(null, false);
       }
     }
+
+    if (file.fieldname === "news_image") {
+      if (
+        file.mimetype == "image/png" ||
+        file.mimetype == "image/jpg" ||
+        file.mimetype == "image/jpeg"
+      ) {
+        cb(null, true);
+      } else {
+        return cb(null, false);
+      }
+    }
+
 
     if (file.fieldname === "product_image") {
       if (

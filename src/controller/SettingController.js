@@ -80,7 +80,6 @@ class SettingController {
 
   // Updating brand by its id.
   async updatesetting(req, res) {
-    console.log(req.body);
     try {
       req
         .checkBody("phone_no")

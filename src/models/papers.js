@@ -25,7 +25,7 @@ class Papers {
         
         try {
             const [rows_papers, fields] = await connectPool.query(
-                `SELECT paper from papers WHERE paper = ? LIMIT 1`,
+                `SELECT id,paper from papers WHERE paper = ? LIMIT 1`,
                 [input.paper]
             );
 
