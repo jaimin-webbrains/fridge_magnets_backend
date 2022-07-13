@@ -86,10 +86,10 @@ class Products {
   // Add new Products.
   async addProduct(input, filesArr , ids) {
     try {
-      const ans=ids.category_insertId?ids.category_insertId:input.category_id
+      // const ans=ids.category_insertId?ids.category_insertId:input.category_id
       const [rows_products, fields] = await connectPool.query(
-        `SELECT product_name from products WHERE product_name = ? AND category_id = ? LIMIT 1`,
-        [input.product_name , ans]
+        `SELECT product_name from products WHERE product_name = ?  LIMIT 1`,
+        [input.product_name ]
       );
       console.log("rows_products",rows_products)
 
