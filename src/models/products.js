@@ -11,19 +11,6 @@ class Products {
         `SELECT * FROM products order by id desc`
       );
 
-      // const [rows_products_join, fields_join] = await connectPool.query(
-      //   `SELECT p.*,s.size,cl.color,pp.paper,m.marker,c.name as category_name ,c1.name as parent_category_name FROM products as p 
-      //   LEFT JOIN sizes as s ON p.size_id = s.id
-      //   LEFT JOIN colors as cl ON p.color_id = cl.id
-      //   LEFT JOIN papers as pp ON p.paper_type_id = pp.id
-      //   LEFT JOIN markers as m ON p.marker_id = m.id
-      //   LEFT JOIN categories as c ON p.category_id = c.id
-      //   LEFT JOIN categories as c1 ON p.parent_category_id = c1.id
-      //   `,
-      // );
-     
-      // console.log("rows_products_join",rows_products_join,rows_products)
-
       return rows_products;
     } catch (e) {
       console.log(e);
