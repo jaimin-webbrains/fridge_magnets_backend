@@ -42,3 +42,5 @@ module.exports.NEWS_UPDATE = "News is Updated ";
 module.exports.NEWS_DELETE = "News is Deleted";
 
 module.exports.SETTING_UPDATE = "Setting is Updated ";
+
+module.exports.INQUIRY_ADD = "Inquiry is Added ";

@@ -1,4 +1,4 @@
-const { getCurrentTime } = require("../helpers/helpers");
+const { getCurrentTime, getIdFromSlug } = require("../helpers/helpers");
 
 class Products {
   constructor() {}
@@ -61,6 +61,28 @@ class Products {
     }
   }
 
+  async getProductBySlug(slug) {
+    const category_id = await getIdFromSlug(slug);
+
+    try {
+      // if (category_id !== "") {
+      const [rows_products, fields] = await connectPool.query(
+        `SELECT p.*,s.size,c.name,c1.name as parent_Category_name FROM products as p
+        LEFT JOIN sizes as s ON p.size_id = s.id 
+        LEFT JOIN categories as c ON p.category_id = c.id  
+        LEFT JOIN categories as c1 ON p.parent_category_id = c1.id  
+        where p.category_id = ?`,
+        [category_id]
+      );
+      // }
+      // console.log(rows_products);
+      return rows_products;
+    } catch (e) {
+      console.log(e);
+      throw new Error(e);
+    }
+  }
+
   // Add new Products.
   async addProduct(input, filesArr , ids) {
     try {
@@ -93,7 +115,6 @@ class Products {
         const brands = JSON.parse(input.brands);
         const brandImages = filesArr.brand_image;
         while (s < brands.length) {
-
           let brandsData = {};
 
           if (brands) {
@@ -163,7 +184,7 @@ class Products {
           show_on_home_page = ?,
           updated_at = ? 
           WHERE id = ?`,
-         
+
           [
             input.product_name,
             ids.category_insertId !== ""?ids.category_insertId: input.category_id,

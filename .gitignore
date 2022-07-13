@@ -1,7 +1,6 @@
 package-lock.json
 node_modules/
 src/db/connection.js
-Public/
 README.md
 uploads
 CSV_Files

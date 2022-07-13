@@ -8,6 +8,11 @@ router.get("/products/list", ProductsController.getProducts);
 router.get("/productsTable/list", ProductsController.getProductsTable);
 
 router.post("/product/getById", ProductsController.getEditProduct);
+router.get("/product/getProduct/:slug", ProductsController.getProductBySlug);
+router.get(
+  "/product/printing-products/:slug",
+  ProductsController.getProductBySlug
+);
 router.post(
   "/products/add",
   upload.fields([{ name: "product_image" }, { name: "brand_image" }]),

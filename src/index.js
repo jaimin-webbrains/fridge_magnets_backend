@@ -15,6 +15,8 @@ const ProductsRoutes = require("./routes/products");
 const settingController = require("./routes/setting");
 const NewsController = require("./routes/news")
 
+// const productBrandsRoutes = require("./routes/productBrands");
+const InquiryController = require("./routes/inquiry");
 
 const path = require("path");
 
@@ -57,7 +59,9 @@ app.use(MarkersRoutes);
 app.use(ProductsRoutes);
 app.use(settingController);
 app.use(NewsController)
+app.use(InquiryController);
 
+// app.use(productBrandsRoutes);
 
 app.use("/", express.static(__dirname.replace("/src", "") + "/Public"));
 app.get("*", (req, res) => {
