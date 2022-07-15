@@ -13,12 +13,11 @@ const PapersRoutes = require("./routes/papers");
 const MarkersRoutes = require("./routes/markers");
 const ProductsRoutes = require("./routes/products");
 const settingController = require("./routes/setting");
-const NewsController = require("./routes/news")
-
-// const productBrandsRoutes = require("./routes/productBrands");
-const InquiryController = require("./routes/inquiry");
+const NewsRoutes= require("./routes/news")
+const InquiryRoutes= require("./routes/inquiry");
 
 const path = require("path");
+const GalleryRoutes = require("./routes/gallerys");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -58,8 +57,9 @@ app.use(PapersRoutes);
 app.use(MarkersRoutes);
 app.use(ProductsRoutes);
 app.use(settingController);
-app.use(NewsController)
-app.use(InquiryController);
+app.use(NewsRoutes)
+app.use(InquiryRoutes);
+app.use(GalleryRoutes)
 
 // app.use(productBrandsRoutes);
 
