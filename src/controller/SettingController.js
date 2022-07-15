@@ -21,6 +21,7 @@ class SettingController {
       if (result) {
         return ResponseHandler.successResponse(res, 200, "", result);
       }
+      return result;
     } catch (e) {
       console.log(e);
       ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);

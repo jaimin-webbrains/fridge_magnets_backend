@@ -25,11 +25,11 @@ class CreateSettingTable {
         const [insert_categories, fields] = await connectPool.query(
           `INSERT INTO setting SET ?`,
           {
-            phone_no: null,
-            email: "",
+            phone_no: "1300 135 906",
+            email: "admin@wholesale-magnets.com.au",
             logo: "",
-            artwork_label1: "",
-            artwork_label2: "",
+            artwork_label1: "I will supply my own artwork",
+            artwork_label2: "Please create my artwork",
             created_at: new Date(),
           }
         );

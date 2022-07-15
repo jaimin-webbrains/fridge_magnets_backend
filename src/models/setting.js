@@ -43,12 +43,11 @@ class Setting {
 
   // Updating setting by its id.
   async updateSetting(input, filename) {
-    console.log(filename);
     try {
       const [rows_settings, fields] = await connectPool.query(
         `SELECT * from setting LIMIT 1`
       );
-
+      console.log("ggjg", filename);
       if (rows_settings.length === 1) {
         const [check_settings, fields] = await connectPool.query(
           `SELECT * from setting LIMIT 1`
