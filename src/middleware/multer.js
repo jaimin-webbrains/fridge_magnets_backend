@@ -11,7 +11,9 @@ const multerStorage = multer.diskStorage({
       //   file.fieldname === "customer_images" ||
       //   file.fieldname === "customer_docs"||
       file.fieldname === "brand_image" ||
-      file.fieldname === "product_image"
+      file.fieldname === "product_image"||
+        file.fieldname === "product_Images"
+
     ) {
       if (!fs.existsSync(process.env.UPLOAD_DIR)) {
         fs.mkdirSync(process.env.UPLOAD_DIR);
@@ -36,6 +38,18 @@ exports.upload = multer({
   storage: multerStorage,
   fileFilter: (req, file, cb) => {
     if (file.fieldname === "logo") {
+      if (
+        file.mimetype == "image/png" ||
+        file.mimetype == "image/jpg" ||
+        file.mimetype == "image/jpeg"
+      ) {
+        cb(null, true);
+      } else {
+        return cb(null, false);
+      }
+    }
+
+    if (file.fieldname === "product_Images") {
       if (
         file.mimetype == "image/png" ||
         file.mimetype == "image/jpg" ||
