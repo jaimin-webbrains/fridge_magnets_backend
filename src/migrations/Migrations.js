@@ -12,6 +12,7 @@ const AlterProductAttributeTable = require("./AlterProductAttributeTable");
 const CreateSettingTable = require("./CreateSettingTable");
 const AlterCategriseTable = require("./AlterCategriseTable");
 const CreateInquiryTable = require("./CreateInquiryTable");
+const CreateNewsTable = require("./CreateNewsTable");
 class Migrations {
   constructor() {}
 
@@ -30,6 +31,7 @@ class Migrations {
     await CreateSettingTable.create();
     await AlterCategriseTable.create();
     await CreateInquiryTable.create();
+    await CreateNewsTable.create();
     res.send(["Migrated"]);
   }
 }
