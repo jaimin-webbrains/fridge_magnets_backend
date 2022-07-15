@@ -41,6 +41,9 @@ module.exports.NEWS_ADD = "News is Added ";
 module.exports.NEWS_UPDATE = "News is Updated ";
 module.exports.NEWS_DELETE = "News is Deleted";
 
+module.exports.GALLERYS_ADD = "Images Added Into Gallery";
+module.exports.GALLERYS_DELETED = "Image Removed From Gallery ";
+
 module.exports.SETTING_UPDATE = "Setting is Updated ";
 
 module.exports.INQUIRY_ADD = "Inquiry is Added ";

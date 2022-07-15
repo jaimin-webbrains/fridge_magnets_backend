@@ -686,27 +686,12 @@ class ProductsController {
               } catch (e) {
                 console.log(e);
                 throw new Error(e);
-              }
-
-
-               
-              
-            
-            
-            
-            
-            
-            
-            
-            
-            }
-              
+              }            
+            }              
             catch (e) {
               console.log(e);
               ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
-            }
-
-            
+            }            
           })
       }
     } catch (e) {
