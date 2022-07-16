@@ -532,7 +532,6 @@ class ProductsController {
                     };
                     const result = await colors.addColor(color_data, res);
                     color_insertId = result.insertId?result.insertId:result[0].id
-                    console.log("color -iddwdadds",result)  
                   }
                 }
                 //SIZE
@@ -547,7 +546,6 @@ class ProductsController {
                   };
                   const result = await Sizes.addSize(size_data, res);
                   size_insertId =  result.insertId ? result.insertId : result[0].id
-                  console.log("size -iddwdadds",result)  
 
                 }
 
@@ -564,8 +562,6 @@ class ProductsController {
                   const result = await Papers.addPaper(paper_data, res);
                   paper_type_insertId =  result.insertId ? result.insertId : result[0].id
 
-                  console.log("paper -iddwdadds",result)  
-
                 }
                 
                 // marker
@@ -579,14 +575,11 @@ class ProductsController {
                   };
                   const result = await Markers.addMarker(marker_data, res);
                   marker_insertId =  result.insertId ? result.insertId : result[0].id
-                
-                  console.log("marker -iddwdadds",result)  
-
+  
                 }
 
                 //BRANDS  
                 const brand_name_array = record.brand_name.split(",") 
-                // console.log(brand_name_array[0],brand_name_array.length)
 
                 if (
                   record.brand_name
@@ -614,12 +607,10 @@ class ProductsController {
                   `SELECT product_name from products WHERE product_name = ? LIMIT 1`,
                   [record.product_name]
                 );
-                console.log("typeof category_insertId",typeof category_insertId)
           
                 if (rows_products.length === 0) {
                   let productsData = {
                     product_name: record.product_name,
-
                     category_id: category_insertId,
                     parent_category_id: parent_category_insertId,
                     color_id: color_insertId,
@@ -639,7 +630,6 @@ class ProductsController {
           
                   let j = 0;
                   let brandsData = {}
-                  console.log("brands_insertIds.length",brands_insertIds.length)
             
                   while (j < brands_insertIds.length) {
           
@@ -663,7 +653,6 @@ class ProductsController {
                   return rows;
                 }
                
-                console.log("rows_products",rows_products)
                 if (rows_products) {
                   if (rows_products[0]?.product_name === record.product_name) {
                     return ResponseHandler.errorResponse(
@@ -700,7 +689,6 @@ class ProductsController {
     }
   }
   async getProductBySlug(req, res) {
-    // console.log(req.params.slug);
     try {
       const result = await Products.getProductBySlug(req.params.slug);
 

@@ -25,7 +25,6 @@ class Setting {
   //       `SELECT * from setting  LIMIT 1`
   //     );
 
-  //     console.log(input);
 
   //     if (rows_settings.length === 0) {
   //       const [rows, fields] = await connectPool.query(
@@ -36,14 +35,12 @@ class Setting {
   //     }
   //     return rows_settings;
   //   } catch (e) {
-  //     console.log(e);
   //     throw new Error(e);
   //   }
   // }
 
   // Updating setting by its id.
   async updateSetting(input, filename) {
-    console.log(filename);
     try {
       const [rows_settings, fields] = await connectPool.query(
         `SELECT * from setting LIMIT 1`
@@ -53,7 +50,6 @@ class Setting {
         const [check_settings, fields] = await connectPool.query(
           `SELECT * from setting LIMIT 1`
         );
-        console.log(check_settings.length);
         if (check_settings.length === 1) {
           const [rows, updateFields] = await connectPool.query(
             `UPDATE setting SET
@@ -73,7 +69,6 @@ class Setting {
               getCurrentTime(),
             ]
           );
-          console.log(rows);
           return rows;
         }
         return check_settings;

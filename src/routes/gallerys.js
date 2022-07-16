@@ -6,7 +6,7 @@ const GallerysController = require("../controller/GallerysController");
 
 router.get("/gallerys/list", GallerysController.getGallerys);
 router.post("/gallerys/add",  upload.array("product_Images"),GallerysController.addGallery);
-// router.put("/gallerys/update", upload.array("product_Images"),GallerysController.updateGallery);
+//router.put("/gallerys/update", upload.array("product_Images"),GallerysController.updateGallery);
 router.delete("/gallerys/delete", GallerysController.deleteGallery);
 
 module.exports = router;

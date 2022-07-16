@@ -32,7 +32,6 @@ class Products {
         `,
       );
      
-      // console.log("rows_products_join",rows_products_join,rows_products)
 
       return rows_products_join;
     } catch (e) {
@@ -75,7 +74,6 @@ class Products {
         [category_id]
       );
       // }
-      // console.log(rows_products);
       return rows_products;
     } catch (e) {
       console.log(e);
@@ -91,7 +89,6 @@ class Products {
         `SELECT product_name from products WHERE product_name = ?  LIMIT 1`,
         [input.product_name ]
       );
-      console.log("rows_products",rows_products)
 
       if (rows_products.length === 0) {
         let productsData = {
