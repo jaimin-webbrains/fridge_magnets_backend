@@ -88,6 +88,8 @@ class Auth {
                 "SELECT * FROM users WHERE email = ? LIMIT 1",
                 [input.email]
             );
+
+            var token ;
             if (
                 rows_user.length > 0 
                 // &&
@@ -103,7 +105,7 @@ class Auth {
                 if (!isMatch) {
                     return [];
                 }
-                const token = await jwt.sign({ id: user.id }, "users");
+                 token = await jwt.sign({ id: user.id }, "users");
                 const [row_token, fields] = await connectPool.query(
                     "INSERT INTO users_token SET ?",
                     {
@@ -114,6 +116,9 @@ class Auth {
                 // user = await UserModel.getUserFullDetails(user.id);
                 // user.token = token;
                 // await RunUserMigration.runuserMigration(user.table_prefix);
+            // console.log("rows_user",{...user,token:token})
+
+            user = {...user,token:token}
 
                 return user;
             }
