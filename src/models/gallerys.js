@@ -10,7 +10,7 @@ class Gallerys {
       const [rows_gallerys, fields] = await connectPool.query(
         `SELECT g.*,c.name as category_name FROM gallerys as g join categories as c on c.id = g.category_id`
       );
-      console.log("rows_gallerys",rows_gallerys)
+      console.log("rows_gallerys", rows_gallerys);
       return rows_gallerys;
     } catch (e) {
       console.log(e);
@@ -21,31 +21,31 @@ class Gallerys {
   // Add new Gallerys.
   async addGallery(input, file) {
     try {
-    //   const [rows_gallerys, fields] = await connectPool.query(
-    //     `SELECT id,category_id from gallerys  LIMIT 1`,      
-    //   );
-      console.log("rows_gallerys", file.length,file);
+      //   const [rows_gallerys, fields] = await connectPool.query(
+      //     `SELECT id,category_id from gallerys  LIMIT 1`,
+      //   );
+      console.log("rows_gallerys", file.length, file);
 
-        let s = 0;
-        while (s < file.length) {
-          let galleryImagesData = {};
+      let s = 0;
+      while (s < file.length) {
+        let galleryImagesData = {};
 
         //   if (file) {
-            galleryImagesData = {
-              category_id: input.category_id,
-              product_Images: file[s].filename,
-            };
+        galleryImagesData = {
+          category_id: input.category_id,
+          product_Images: file[s].filename,
+        };
         //   }
         // console.log("galleryImagesData",galleryImagesData)
-          const [rows, fields] = await connectPool.query(
-            "INSERT INTO gallerys set ? ",
-            { ...galleryImagesData, created_at: getCurrentTime() }
-          );
-          s++
-          console.log(rows)
-          // return true;
-        }
-        return true;
+        const [rows, fields] = await connectPool.query(
+          "INSERT INTO gallerys set ? ",
+          { ...galleryImagesData, created_at: getCurrentTime() }
+        );
+        s++;
+        console.log(rows);
+        // return true;
+      }
+      return true;
     } catch (e) {
       console.log(e);
       throw new Error(e);
@@ -70,10 +70,10 @@ class Gallerys {
   //         let s = 0;
   //         while (s < file.length) {
   //         const [rows, updateFields] = await connectPool.query(
-  //           `UPDATE gallerys SET 
-  //                   category_id = ?,  
-  //                   product_Images = ?,                    
-  //                   updated_at = ? 
+  //           `UPDATE gallerys SET
+  //                   category_id = ?,
+  //                   product_Images = ?,
+  //                   updated_at = ?
   //                   WHERE id = ?`,
   //           [input.category_id,file[s].filename, getCurrentTime(), input.id]
   //         );
@@ -106,6 +106,20 @@ class Gallerys {
         );
         return rows;
       }
+      return rows_gallerys;
+    } catch (e) {
+      console.log(e);
+      throw new Error(e);
+    }
+  }
+
+  async getGallery(input) {
+    try {
+      const [rows_gallerys, fields] = await connectPool.query(
+        `SELECT g.*,c.name as category_name,c.slug FROM gallerys as g join categories as c on c.id = g.category_id WHERE c.name=?`,
+        [input]
+      );
+      console.log(rows_gallerys);
       return rows_gallerys;
     } catch (e) {
       console.log(e);

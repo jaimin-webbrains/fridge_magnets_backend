@@ -1,6 +1,5 @@
 const { getCurrentTime } = require("../helpers/helpers");
 
-
 class Categories {
   constructor() {}
 
@@ -55,13 +54,14 @@ class Categories {
         [input.name]
       );
       // console.log(rows_categories,"rows_categories")
+      console.log("replcae", input.name.replace(/-/g, "-").toString());
 
       if (rows_categories.length === 0) {
         const [rows, fields] = await connectPool.query(
           "INSERT INTO categories set ? ",
           {
             ...input,
-            slug: input.name.replace(" ", "-").toLowerCase(),
+            slug: input.name.replace(/\s/gm, "-").toLowerCase(),
             created_at: getCurrentTime(),
           }
         );
@@ -101,7 +101,7 @@ class Categories {
               input.description,
               input.parent_id,
               getCurrentTime(),
-              input.name.replace(" ", "-").toLowerCase(),
+              input.name.replace(/\s/gm, "-").toLowerCase(),
               input.id,
             ]
           );
