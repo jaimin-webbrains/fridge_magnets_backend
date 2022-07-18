@@ -5,8 +5,13 @@ const { upload } = require("../middleware/multer");
 const GallerysController = require("../controller/GallerysController");
 
 router.get("/gallerys/list", GallerysController.getGallerys);
-router.post("/gallerys/add", auth ,upload.array("product_Images"),GallerysController.addGallery);
+router.post(
+    "/gallerys/add",
+    auth,
+    upload.array("product_Images"),
+    GallerysController.addGallery
+);
 //router.put("/gallerys/update", upload.array("product_Images"),GallerysController.updateGallery);
-router.delete("/gallerys/delete", auth ,GallerysController.deleteGallery);
+router.delete("/gallerys/delete", auth, GallerysController.deleteGallery);
 
 module.exports = router;
