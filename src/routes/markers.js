@@ -1,11 +1,11 @@
 var express = require("express");
 var router = express.Router();
-// const auth = require("../middleware/auth");
+const auth = require("../middleware/auth");
 const MarkersController = require("../controller/MarkersController");
 
 router.get("/markers/list", MarkersController.getMarkers);
-router.post("/markers/add", MarkersController.addMarker);
-router.put("/markers/update", MarkersController.updateMarker);
-router.delete("/markers/delete", MarkersController.deleteMarker);
+router.post("/markers/add", auth , MarkersController.addMarker);
+router.put("/markers/update", auth , MarkersController.updateMarker);
+router.delete("/markers/delete", auth , MarkersController.deleteMarker);
 
 module.exports = router;

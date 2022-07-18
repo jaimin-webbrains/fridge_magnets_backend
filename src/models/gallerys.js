@@ -10,7 +10,6 @@ class Gallerys {
       const [rows_gallerys, fields] = await connectPool.query(
         `SELECT g.*,c.name as category_name FROM gallerys as g join categories as c on c.id = g.category_id`
       );
-      console.log("rows_gallerys",rows_gallerys)
       return rows_gallerys;
     } catch (e) {
       console.log(e);
@@ -24,7 +23,6 @@ class Gallerys {
     //   const [rows_gallerys, fields] = await connectPool.query(
     //     `SELECT id,category_id from gallerys  LIMIT 1`,      
     //   );
-      console.log("rows_gallerys", file.length,file);
 
         let s = 0;
         while (s < file.length) {
@@ -36,14 +34,12 @@ class Gallerys {
               product_Images: file[s].filename,
             };
         //   }
-        // console.log("galleryImagesData",galleryImagesData)
           const [rows, fields] = await connectPool.query(
             "INSERT INTO gallerys set ? ",
             { ...galleryImagesData, created_at: getCurrentTime() }
           );
           s++
-          console.log(rows)
-          // return true;
+         
         }
         return true;
     } catch (e) {

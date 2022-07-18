@@ -5,7 +5,6 @@ const smtpTransport = require("nodemailer-smtp-transport");
 class EmailHandler {
   async sendEmail(email, body, subject, cc = "", attachments = []) {
     try {
-      console.log("email", email);
       const transporter = nodemailer.createTransport(
         smtpTransport({
           host: process.env.SMTP_HOST,

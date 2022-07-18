@@ -96,9 +96,7 @@ class NewsController {
 
     // Updating news by its id.
     async updateNews(req, res) {
-        console.log(req.body)
         try {
-            console.log(req.body)
             req.checkBody("news")
                 .notEmpty()
                 .withMessage("Please enter news name.")

@@ -3,6 +3,7 @@ var router = express.Router();
 const { upload } = require("../middleware/multer");
 const ProductsController = require("../controller/ProductsController");
 const { uploadImages } = require("../middleware/csv_multer");
+const auth = require("../middleware/auth");
 
 router.get("/products/list", ProductsController.getProducts);
 router.get("/productsTable/list", ProductsController.getProductsTable);
@@ -22,16 +23,16 @@ router.get(
   ProductsController.getProductBySlug
 );
 router.post(
-  "/products/add",
+  "/products/add", auth ,
   upload.fields([{ name: "product_image" }, { name: "brand_image" }]),
   ProductsController.addProduct
 );
 router.put(
-  "/products/update/:id",
+  "/products/update/:id", auth ,
   upload.fields([{ name: "product_image" }, { name: "brand_image" }]),
   ProductsController.updateProduct
 );
-router.delete("/products/delete", ProductsController.deleteProduct);
+router.delete("/products/delete", auth, ProductsController.deleteProduct);
 
 router.post("/products/importfile",uploadImages ,ProductsController.importCsvFile);
 

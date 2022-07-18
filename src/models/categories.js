@@ -54,7 +54,6 @@ class Categories {
         `SELECT name,id from categories WHERE name = ? LIMIT 1`,
         [input.name]
       );
-      // console.log(rows_categories,"rows_categories")
 
       if (rows_categories.length === 0) {
         const [rows, fields] = await connectPool.query(

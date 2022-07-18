@@ -3,7 +3,6 @@ var fs = require("fs");
 
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    console.log("file", file);
     if (
       file.fieldname === "logo" ||
       file.fieldname === "news_image" ||

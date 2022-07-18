@@ -15,9 +15,11 @@ const ProductsRoutes = require("./routes/products");
 const settingController = require("./routes/setting");
 const NewsRoutes= require("./routes/news")
 const InquiryRoutes= require("./routes/inquiry");
+const GalleryRoutes = require("./routes/gallerys");
+const UserLoginRoutes = require("./routes/Userlogin")
+
 
 const path = require("path");
-const GalleryRoutes = require("./routes/gallerys");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -60,7 +62,7 @@ app.use(settingController);
 app.use(NewsRoutes)
 app.use(InquiryRoutes);
 app.use(GalleryRoutes)
-
+app.use(UserLoginRoutes)
 // app.use(productBrandsRoutes);
 
 app.use("/", express.static(__dirname.replace("/src", "") + "/Public"));
