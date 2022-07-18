@@ -15,32 +15,32 @@ const CreateInquiryTable = require("./CreateInquiryTable");
 const CreateGalleryTable = require("./CreateGalleryTable");
 const CreatNewsTable = require("./CreateNewsTable");
 const CreateUserLoginTable = require("./CreateUserLoginTable");
-
-
+const AlterBrandTable = require("./AlterBrandTable");
 
 class Migrations {
-  constructor() {}
+    constructor() {}
 
-  async migrate(req, res) {
-    await CreateMigrationTable.create();
-    await CreateCategoriesTable.create();
-    await CreatePaperTable.create();
-    await CreateSizeTable.create();
-    await CreateBrandTable.create();
-    await CreateMarkerTable.create();
-    await CreateColorTable.create();
-    await CreateProductTable.create();
-    await CreateProductBrandsTable.create();
-    await AlterProductTable.create();
-    await AlterProductAttributeTable.create();
-    await CreateSettingTable.create();
-    await AlterCategriseTable.create();
-    await CreateInquiryTable.create();
-    await CreatNewsTable.create();
-    await CreateGalleryTable.create();
-    await CreateUserLoginTable.create();
-    res.send(["Migrated"]);
-  }
+    async migrate(req, res) {
+        await CreateMigrationTable.create();
+        await CreateCategoriesTable.create();
+        await CreatePaperTable.create();
+        await CreateSizeTable.create();
+        await CreateBrandTable.create();
+        await CreateMarkerTable.create();
+        await CreateColorTable.create();
+        await CreateProductTable.create();
+        await CreateProductBrandsTable.create();
+        await AlterProductTable.create();
+        await AlterProductAttributeTable.create();
+        await CreateSettingTable.create();
+        await AlterCategriseTable.create();
+        await CreateInquiryTable.create();
+        await CreatNewsTable.create();
+        await CreateGalleryTable.create();
+        await AlterBrandTable.create();
+        await CreateUserLoginTable.create();
+        res.send(["Migrated"]);
+    }
 }
 
 module.exports = new Migrations();
