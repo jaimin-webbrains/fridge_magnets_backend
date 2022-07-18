@@ -45,6 +45,8 @@ module.exports.GALLERYS_ADD = "Images Added Into Gallery";
 module.exports.GALLERYS_DELETED = "Image Removed From Gallery ";
 
 module.exports.LOGIN_SUCCESS = "Logged in Successfuly";
+module.exports.LOGIN_FAILED = "Password or Email is Incorrect";
+
 
 module.exports.SETTING_UPDATE = "Setting is Updated ";
 

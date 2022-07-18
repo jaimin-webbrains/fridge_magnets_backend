@@ -220,25 +220,26 @@ class AuthController {
     }
 
     // Logout Controller all users.
-    // async logout(req, res) {
-    //     try {
-    //         const result = await Auth.logout(req.user);
-    //         ResponseHandler.successResponse(
-    //             res,
-    //             200,
-    //             MSGConst.LOGOUT_SUCCESS,
-    //             []
-    //         );
-    //     } catch (e) {
-    //         console.log(e);
-    //         ResponseHandler.errorResponse(
-    //             res,
-    //             400,
-    //             MSGConst.SOMETHING_WRONG,
-    //             []
-    //         );
-    //     }
-    // }
+    async user_logout(req, res) {
+        console.log(req)
+        try {
+            const result = await Auth.user_logout(req.user);
+            ResponseHandler.successResponse(
+                res,
+                200,
+                MSGConst.LOGOUT_SUCCESS,
+                []
+            );
+        } catch (e) {
+            console.log(e);
+            ResponseHandler.errorResponse(
+                res,
+                400,
+                MSGConst.SOMETHING_WRONG,
+                []
+            );
+        }
+    }
 
     // User details controller to check login user data.
     // async check(req, res) {
