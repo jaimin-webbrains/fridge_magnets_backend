@@ -120,8 +120,7 @@ class Auth {
                 // await RunUserMigration.runuserMigration(user.table_prefix);
             // console.log("rows_user",{...user,token:token})
 
-            user = {...user,token:token, user_id: user.id}
-            console.log(user)
+            user = {...user,token:token}
 
                 return user;
             }
@@ -203,7 +202,6 @@ class Auth {
     // }
    
     async user_logout(input) {
-        console.log("input==============>",input)
         try {
             const [rows_user, fields] = await connectPool.query(
                 "DELETE FROM users_token WHERE user_id = ? AND token = ?",

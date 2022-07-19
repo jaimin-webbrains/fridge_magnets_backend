@@ -221,9 +221,8 @@ class AuthController {
 
     // Logout Controller all users.
     async user_logout(req, res) {
-        console.log(req)
         try {
-            const result = await Auth.user_logout(req.user);
+            const result = await Auth.user_logout(req.body);
             ResponseHandler.successResponse(
                 res,
                 200,
@@ -242,21 +241,27 @@ class AuthController {
     }
 
     // User details controller to check login user data.
-    // async check(req, res) {
-    //     if (req.user) {
-    //         var token = req.user.token;
-    //         req.user = await UserModel.getUserFullDetails(req.user.id);
-    //         req.user.token = token;
-    //         ResponseHandler.successResponse(
-    //             res,
-    //             200,
-    //             MSGConst.SUCCESS,
-    //             req.user
-    //         );
-    //     } else {
-    //         ResponseHandler.errorResponse(res, 400, MSGConst.LOGIN_FAIL, []);
-    //     }
-    // }
+    async check(req, res) {
+        console.log(req.body)
+        if (req.body) {
+            var token = req.body.token;
+            const [rows_user, fields] = await connectPool.query(
+                "SELECT * FROM users WHERE id = ? LIMIT 1",
+                [req.body.id]
+            );
+
+            // req.user = await UserModel.getUserFullDetails(req.user.id);
+            // req.user.token = token;
+            ResponseHandler.successResponse(
+                res,
+                200,
+                MSGConst.SUCCESS,
+                req.body
+            );
+        } else {
+            ResponseHandler.errorResponse(res, 400, MSGConst.LOGIN_FAIL, []);
+        }
+    }
 
     // Forgot Password Controller for user.
     // async forgotPassword(req, res) {
