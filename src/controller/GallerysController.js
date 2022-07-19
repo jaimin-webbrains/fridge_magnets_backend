@@ -97,7 +97,6 @@ class GallerysController {
   //                 errors
   //             );
   //         }
-  //         console.log("req.body",req.body,req.files)
 
   //         const result = await Gallerys.updateGallery(req.body,req.files);
 

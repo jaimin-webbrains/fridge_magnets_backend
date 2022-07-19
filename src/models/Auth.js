@@ -118,7 +118,6 @@ class Auth {
                 // user = await UserModel.getUserFullDetails(user.id);
                 // user.token = token;
                 // await RunUserMigration.runuserMigration(user.table_prefix);
-            // console.log("rows_user",{...user,token:token})
 
             user = {...user,token:token}
 
