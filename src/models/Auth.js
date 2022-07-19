@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 //     addNotifications,
 // } = require("../helpers/helpers");
 const EmailHandler = require("../handlers/emailhandler");
+const { getCurrentTime } = require("../helpers/helpers");
 // const RunUserMigration = require("../migrations/RunUserMigration");
 // const RegisterEmailTemplate = require("../emailTemplates/RegisterEmailTemplate");
 // const ResetPasswordTemplate = require("../emailTemplates/ResetPasswordTemplate");
@@ -111,6 +112,7 @@ class Auth {
                     {
                         user_id: user.id,
                         token: token,
+                        created_at:getCurrentTime()
                     }
                 );
                 // user = await UserModel.getUserFullDetails(user.id);
@@ -199,17 +201,17 @@ class Auth {
     //     }
     // }
    
-    // async logout(input) {
-    //     try {
-    //         const [rows_user, fields] = await connectPool.query(
-    //             "DELETE FROM users_token WHERE user_id = ? AND token = ?",
-    //             [input.id, input.token]
-    //         );
-    //         return rows_user;
-    //     } catch (e) {
-    //         throw Error(e);
-    //     }
-    // }
+    async user_logout(input) {
+        try {
+            const [rows_user, fields] = await connectPool.query(
+                "DELETE FROM users_token WHERE user_id = ? AND token = ?",
+                [input.id, input.token]
+            );
+            return rows_user;
+        } catch (e) {
+            throw Error(e);
+        }
+    }
 
     // async update_prefix(id) {
     //     try {
