@@ -5,5 +5,4 @@ const InquiryController = require("../controller/InquiryController");
 router.get("/inquiries/list", InquiryController.getInquiries);
 router.post("/inquiry/add", InquiryController.addInquiry);
 
-
 module.exports = router;

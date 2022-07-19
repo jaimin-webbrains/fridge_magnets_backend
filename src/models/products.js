@@ -101,7 +101,7 @@ class Products {
         [category_id]
       );
       // }
-      // console.log(rows_products);
+      console.log(rows_products);
       return rows_products;
     } catch (e) {
       console.log(e);
