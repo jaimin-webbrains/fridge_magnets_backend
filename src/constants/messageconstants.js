@@ -51,3 +51,5 @@ module.exports.LOGIN_FAIL = "Plese login again";
 module.exports.SETTING_UPDATE = "Setting is Updated ";
 
 module.exports.INQUIRY_ADD = "Inquiry is Added ";
+
+module.exports.EMAIL_SEND = "Email has been sent";
