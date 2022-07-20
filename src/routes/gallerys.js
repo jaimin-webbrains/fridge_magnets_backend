@@ -4,14 +4,15 @@ const auth = require("../middleware/auth");
 const { upload } = require("../middleware/multer");
 const GallerysController = require("../controller/GallerysController");
 
-router.get("/gallerys/list", GallerysController.getGallerys);
+router.get("/gallerys/list", auth, GallerysController.getGallerys);
+router.post("/gallery/list", GallerysController.getGallery);
 router.post(
     "/gallerys/add",
     auth,
     upload.array("product_Images"),
     GallerysController.addGallery
 );
-//router.put("/gallerys/update", upload.array("product_Images"),GallerysController.updateGallery);
+// router.put("/gallerys/update", upload.array("product_Images"),GallerysController.updateGallery);
 router.delete("/gallerys/delete", auth, GallerysController.deleteGallery);
 
 module.exports = router;
