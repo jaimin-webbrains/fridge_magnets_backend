@@ -7,7 +7,6 @@ const auth = require("../middleware/auth");
 router.get("/setting/list", SettingController.getSetting);
 // router.post("/setting/add", SettingController.adrsdsetting);
 router.put( 
- 
   "/setting/update",
   auth,
   upload.single("logo"),

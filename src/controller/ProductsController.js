@@ -490,6 +490,7 @@ class ProductsController {
     //csv file upload
 
     async importCsvFile(req, res) {
+        // console.log("====================================>",req.file,req.body)
         try {
             const records = [];
             if (req.file) {
@@ -498,6 +499,7 @@ class ProductsController {
                 fs.createReadStream(`${filePath}/${req.file.originalname}`)
                     .pipe(parse({ bom: false, columns: true }))
                     .on("data", async (data) => {
+                        console.log("data=========>",data)
                         records.push({
                             ...data,
                         });
@@ -626,6 +628,10 @@ class ProductsController {
                             //BRANDS
                             const brand_name_array =
                                 record.brand_name.split(",");
+                            const brand_img_array = 
+                                record.brandimg.split(",")
+
+                                console.log("brand_img_array==================>",brand_img_array)
 
                             if (record.brand_name && record.brand_name !== "") {
                                 let s = 0;
@@ -668,7 +674,7 @@ class ProductsController {
                                         product_quantity:
                                             record?.product_quantity,
                                         SKU: record?.SKU,
-                                        product_image: "",
+                                        product_image: record.product_image,
                                         show_on_home_page: "0",
                                     };
 
@@ -689,7 +695,7 @@ class ProductsController {
                                             brandsData = {
                                                 product_id: rows.insertId,
                                                 brand_id: brands_insertIds[j],
-                                                brandimg: "",
+                                                brandimg: brand_img_array[j],
                                                 show_on_homepage: 0,
                                                 created_at: getCurrentTime(),
                                             };

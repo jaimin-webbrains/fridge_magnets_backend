@@ -1,2 +1,2 @@
-product_name,brand_name,product_quantity,SKU,parent_category_name,category_name,color,paper_type,size_val,marker_val
-"Product","apple,ios,android",2,"dddsd23213","social","social cat","green","Recycled_paper","A4","Yes"
+product_name,product_image,brand_name,brandimg,product_quantity,SKU,parent_category_name,category_name,color,paper_type,size_val,marker_val
+"Product","1657718823095_product_image.jpg","apple,ios,android","1657718823106_brand_image.png,media5.jpeg,data/media5.jpeg ",2,"dddsd23213","social","social cat","green","Recycled_paper","A4","Yes"
