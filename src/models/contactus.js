@@ -31,7 +31,7 @@ class contactus {
       // send mail with defined transport object
       let info = await transporter.sendMail({
         from: `${input.email}`, // sender address
-        to: "bilalpatel@yopmail.com", // list of receivers
+        to: "admin@wholesale-magnets.com.au", // list of receivers
         subject: "Contact Information", // Subject line
         // text: "Hello world?", // plain text body
         html: `${htmldata}`, // html body
