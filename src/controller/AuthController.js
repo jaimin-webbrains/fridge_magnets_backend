@@ -242,7 +242,6 @@ class AuthController {
 
     // User details controller to check login user data.
     async check(req, res) {
-        console.log(req.body)
         if (req.body) {
             var token = req.body.token;
             const [rows_user, fields] = await connectPool.query(

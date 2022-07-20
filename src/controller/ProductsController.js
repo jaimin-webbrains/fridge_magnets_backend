@@ -626,7 +626,6 @@ class ProductsController {
                             //BRANDS
                             const brand_name_array =
                                 record.brand_name.split(",");
-                            // console.log(brand_name_array[0],brand_name_array.length)
 
                             if (record.brand_name && record.brand_name !== "") {
                                 let s = 0;
@@ -654,11 +653,7 @@ class ProductsController {
                                         `SELECT product_name from products WHERE product_name = ? LIMIT 1`,
                                         [record.product_name]
                                     );
-                                console.log(
-                                    "typeof category_insertId",
-                                    typeof category_insertId
-                                );
-
+                               
                                 if (rows_products.length === 0) {
                                     let productsData = {
                                         product_name: record.product_name,
@@ -688,11 +683,7 @@ class ProductsController {
 
                                     let j = 0;
                                     let brandsData = {};
-                                    console.log(
-                                        "brands_insertIds.length",
-                                        brands_insertIds.length
-                                    );
-
+                                   
                                     while (j < brands_insertIds.length) {
                                         if (brands_insertIds) {
                                             brandsData = {
@@ -714,7 +705,6 @@ class ProductsController {
                                     return rows;
                                 }
 
-                                console.log("rows_products", rows_products);
                                 if (rows_products) {
                                     if (
                                         rows_products[0]?.product_name ===

@@ -55,7 +55,6 @@ class Products {
         where p.category_id = ? and p1.brand_id = ? and p1.show_on_homepage = ?`,
                 [category_id, brand_id, 1]
             );
-            // console.log(rows_products);
             return rows_products;
         } catch (e) {
             console.log(e);

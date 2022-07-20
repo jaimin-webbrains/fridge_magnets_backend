@@ -111,7 +111,6 @@ class Gallerys {
                 `SELECT g.*,c.name as category_name,c.slug FROM gallerys as g join categories as c on c.id = g.category_id WHERE c.name=?`,
                 [input]
             );
-            console.log(rows_gallerys);
             return rows_gallerys;
         } catch (e) {
             console.log(e);

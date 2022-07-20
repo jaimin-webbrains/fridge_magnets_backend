@@ -4,3 +4,4 @@ src/db/connection.js
 README.md
 uploads
 CSV_Files
+.env
