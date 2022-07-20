@@ -5,7 +5,7 @@ const inquiry = require("../models/inquiry");
 class InquiryController {
   constructor() {}
 
-  async getInquiries(req,res) {
+  async getInquiries(req, res) {
     try {
       const result = await inquiry.getInquiries();
 
@@ -25,7 +25,7 @@ class InquiryController {
       ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
     }
   }
-  async   addInquiry(req, res) {
+  async addInquiry(req, res) {
     console.log(req.body);
     try {
       req.checkBody("name").notEmpty().withMessage("Please enter name.");
@@ -42,11 +42,11 @@ class InquiryController {
         .checkBody("mobile")
         .notEmpty()
         .withMessage("Please enter mobile number.");
-      req
-        .checkBody("postcode")
-        .notEmpty()
-        .withMessage("Please enter postcode.");
-      req.checkBody("artwork").notEmpty().withMessage("Please select artwork.");
+      // req
+      //   .checkBody("postcode")
+      //   .notEmpty()
+      //   .withMessage("Please enter postcode.");
+      // req.checkBody("artwork").notEmpty().withMessage("Please select artwork.");
 
       const errors = req.validationErrors();
       if (errors) {
