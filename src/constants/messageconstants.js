@@ -47,3 +47,5 @@ module.exports.GALLERYS_DELETED = "Image Removed From Gallery ";
 module.exports.SETTING_UPDATE = "Setting is Updated ";
 
 module.exports.INQUIRY_ADD = "Inquiry is Added ";
+
+module.exports.EMAIL_SEND = "Email has been sent";

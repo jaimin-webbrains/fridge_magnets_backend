@@ -13,8 +13,9 @@ const PapersRoutes = require("./routes/papers");
 const MarkersRoutes = require("./routes/markers");
 const ProductsRoutes = require("./routes/products");
 const settingController = require("./routes/setting");
-const NewsRoutes= require("./routes/news")
-const InquiryRoutes= require("./routes/inquiry");
+const NewsRoutes = require("./routes/news");
+const InquiryRoutes = require("./routes/inquiry");
+const contactus = require("./routes/contactus");
 
 const path = require("path");
 const GalleryRoutes = require("./routes/gallerys");
@@ -57,9 +58,10 @@ app.use(PapersRoutes);
 app.use(MarkersRoutes);
 app.use(ProductsRoutes);
 app.use(settingController);
-app.use(NewsRoutes)
+app.use(NewsRoutes);
 app.use(InquiryRoutes);
-app.use(GalleryRoutes)
+app.use(GalleryRoutes);
+app.use(contactus);
 
 // app.use(productBrandsRoutes);
 
