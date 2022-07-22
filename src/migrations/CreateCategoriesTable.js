@@ -23,7 +23,7 @@ class CreateCategoriesTable {
                 const [insert_categories, fields] = await connectPool.query(
                     `INSERT INTO categories SET ?`,
                     {
-                        name: "Fridge Magents",
+                        name: "Fridge Magnets",
                         description: "Fridge Magnets",
                         parent_id: 0,
                         created_at: new Date(),
