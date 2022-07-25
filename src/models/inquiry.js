@@ -18,7 +18,7 @@ class Inquiry {
 
   // Add new inquiry.
   async addInquiry(input) {
-    try {
+    try { 
       const [rows, fields] = await connectPool.query(
         "INSERT INTO inquiry set ? ",
         { ...input, created_at: getCurrentTime() }

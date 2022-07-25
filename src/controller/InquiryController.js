@@ -32,7 +32,7 @@ class InquiryController {
       req
         .checkBody("quantity")
         .notEmpty()
-        .withMessage("Please select quntity.");
+        .withMessage("Please select quantity.");
       req.checkBody("email").notEmpty().withMessage("Please enter email.");
       req
         .checkBody("company")
