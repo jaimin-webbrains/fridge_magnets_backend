@@ -4,7 +4,7 @@ const auth = require("../middleware/auth");
 const { upload } = require("../middleware/multer");
 const GallerysController = require("../controller/GallerysController");
 
-router.get("/gallerys/list", auth, GallerysController.getGallerys);
+router.get("/gallerys/list", GallerysController.getGallerys);
 router.post("/gallery/list", GallerysController.getGallery);
 router.post(
     "/gallerys/add",
