@@ -12,803 +12,773 @@ const fs = require("fs");
 const products = require("../models/products");
 const path = require("path");
 const { getCurrentTime } = require("../helpers/helpers");
+const https = require("https"); // or 'https' for https:// URLs
 
 // const Connection = require("mysql2/typings/mysql/lib/Connection");
 
 class ProductsController {
-    constructor() {}
+  constructor() {}
 
-    // Fetching all products.
-    async getProducts(req, res) {
-        try {
-            const result = await Products.getProducts();
+  // Fetching all products.
+  async getProducts(req, res) {
+    try {
+      const result = await Products.getProducts();
 
-            if (!result) {
-                return ResponseHandler.errorResponse(
-                    res,
-                    400,
-                    MSGConst.SOMETHING_WRONG,
-                    []
-                );
-            }
-            if (result) {
-                return ResponseHandler.successResponse(res, 200, "", result);
-            }
-        } catch (e) {
-            console.log(e);
-            ResponseHandler.errorResponse(
-                res,
-                400,
-                MSGConst.SOMETHING_WRONG,
-                []
-            );
+      if (!result) {
+        return ResponseHandler.errorResponse(
+          res,
+          400,
+          MSGConst.SOMETHING_WRONG,
+          []
+        );
+      }
+      if (result) {
+        return ResponseHandler.successResponse(res, 200, "", result);
+      }
+    } catch (e) {
+      console.log(e);
+      ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
+    }
+  }
+
+  async getProductsTable(req, res) {
+    try {
+      const result = await Products.getProductsTable();
+
+      if (!result) {
+        return ResponseHandler.errorResponse(
+          res,
+          400,
+          MSGConst.SOMETHING_WRONG,
+          []
+        );
+      }
+      if (result) {
+        return ResponseHandler.successResponse(res, 200, "", result);
+      }
+    } catch (e) {
+      console.log(e);
+      ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
+    }
+  }
+
+  //Edit Product
+  async getEditProduct(req, res) {
+    try {
+      const result = await Products.getEditProduct(req.body);
+
+      if (!result) {
+        return ResponseHandler.errorResponse(
+          res,
+          400,
+          MSGConst.SOMETHING_WRONG,
+          []
+        );
+      }
+      if (result) {
+        return ResponseHandler.successResponse(res, 200, "", result);
+      }
+    } catch (e) {
+      console.log(e);
+      ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
+    }
+  }
+
+  // Add new Products.
+  async addProduct(req, res) {
+    let category_insertId = "";
+    let color_insertId = "";
+    let size_insertId = "";
+    let paper_type_insertId = "";
+    let marker_insertId = "";
+
+    try {
+      // CATEGORIES
+      if (
+        req.body.category_id == 0 &&
+        req.body.category_name &&
+        req.body.category_name != ""
+      ) {
+        const data = {
+          name: req.body.category_name,
+          description: req.body.category_name,
+          parent_id: req.body.parent_category_id,
+        };
+        const result = await categories.addCategory(data, res);
+        category_insertId = result.insertId;
+      }
+
+      // COLORS
+      if (
+        req.body.color_id == 0 &&
+        req.body.color_name &&
+        req.body.color_name != ""
+      ) {
+        const color_data = {
+          color: req.body.color_name,
+        };
+        const result = await colors.addColor(color_data, res);
+        color_insertId = result.insertId;
+      }
+
+      // SIZE
+
+      if (
+        req.body.size_id == 0 &&
+        req.body.size_val &&
+        req.body.size_val != ""
+      ) {
+        const size_data = {
+          size: req.body.size_val,
+        };
+        const result = await Sizes.addSize(size_data, res);
+        size_insertId = result.insertId;
+      }
+
+      // PAPER
+      if (
+        req.body.paper_type_id == 0 &&
+        req.body.paper_type &&
+        req.body.paper_type != ""
+      ) {
+        const paper_data = {
+          paper: req.body.paper_type,
+        };
+        const result = await Papers.addPaper(paper_data, res);
+        paper_type_insertId = result.insertId;
+      }
+
+      // MARKER
+
+      if (
+        req.body.marker_id == 0 &&
+        req.body.marker_val &&
+        req.body.marker_val != ""
+      ) {
+        const marker_data = {
+          marker: req.body.marker_val,
+        };
+        const result = await Markers.addMarker(marker_data, res);
+        marker_insertId = result.insertId;
+      }
+
+      const ids = {
+        category_insertId: category_insertId,
+        color_insertId: color_insertId,
+        size_insertId: size_insertId,
+        marker_insertId: marker_insertId,
+        paper_type_insertId: paper_type_insertId,
+      };
+
+      // paper = ? LIMIT 1`,
+      // [input.paper]
+
+      req
+        .checkBody("product_name")
+        .notEmpty()
+        .withMessage("Please enter product name.");
+
+      req
+        .checkBody("category_id")
+        .notEmpty()
+        .withMessage("Please enter category id.")
+        .isInt()
+        .withMessage("Please enter valid category id.");
+
+      req
+        .checkBody("parent_category_id")
+        .notEmpty()
+        .withMessage("Please enter parent category id.")
+        .isInt()
+        .withMessage("Please enter valid parent category id.");
+
+      // req
+      //   .checkBody("color_id")
+      //   .notEmpty()
+      //   .withMessage("Please enter color id.")
+      //   .isInt()
+      //   .withMessage("Please enter valid color id.");
+
+      // req
+      //   .checkBody("size_id")
+      //   .notEmpty()
+      //   .withMessage("Please enter size id.")
+      //   .isInt()
+      //   .withMessage("Please enter valid size id.");
+
+      // req
+      //   .checkBody("paper_type_id")
+      //   .notEmpty()
+      //   .withMessage("Please enter paper type id.")
+      //   .isInt()
+      //   .withMessage("Please enter valid paper type id.");
+
+      // req
+      //   .checkBody("marker_id")
+      //   .notEmpty()
+      //   .withMessage("Please enter marker id.")
+      //   .isInt()
+      //   .withMessage("Please enter valid marker id.");
+
+      const errors = req.validationErrors();
+      if (errors) {
+        return ResponseHandler.errorResponse(
+          res,
+          400,
+          MSGConst.SOMETHING_WRONG,
+          errors
+        );
+      }
+
+      const result = await Products.addProduct(req.body, req.files, ids);
+
+      if (!result) {
+        return ResponseHandler.errorResponse(
+          res,
+          400,
+          MSGConst.SOMETHING_WRONG,
+          []
+        );
+      }
+      if (result) {
+        if (result[0]?.product_name === req.body.product_name) {
+          return ResponseHandler.errorResponse(
+            res,
+            400,
+            MSGConst.PRODUCT_EXIST
+          );
         }
+        return ResponseHandler.successResponse(
+          res,
+          200,
+          MSGConst.PRODUCT_ADD,
+          []
+        );
+      }
+    } catch (e) {
+      console.log(e);
+      ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
+    }
+  }
+
+  // Updating product by its id.
+  async updateProduct(req, res) {
+    let category_insertId = "";
+    let color_insertId = "";
+    let size_insertId = "";
+    let paper_type_insertId = "";
+    let marker_insertId = "";
+
+    if (
+      req.body.category_id == 0 &&
+      req.body.category_name &&
+      req.body.category_name != ""
+    ) {
+      const data = {
+        name: req.body.category_name,
+        description: req.body.category_name,
+        parent_id: req.body.parent_category_id,
+      };
+      const result = await categories.addCategory(data, res);
+      category_insertId = result.insertId;
     }
 
-    async getProductsTable(req, res) {
-        try {
-            const result = await Products.getProductsTable();
-
-            if (!result) {
-                return ResponseHandler.errorResponse(
-                    res,
-                    400,
-                    MSGConst.SOMETHING_WRONG,
-                    []
-                );
-            }
-            if (result) {
-                return ResponseHandler.successResponse(res, 200, "", result);
-            }
-        } catch (e) {
-            console.log(e);
-            ResponseHandler.errorResponse(
-                res,
-                400,
-                MSGConst.SOMETHING_WRONG,
-                []
-            );
-        }
+    //COLOR
+    if (
+      req.body.color_id == 0 &&
+      req.body.color_name &&
+      req.body.color_name != ""
+    ) {
+      const color_data = {
+        color: req.body.color_name,
+      };
+      const result = await colors.addColor(color_data, res);
+      color_insertId = result.insertId;
     }
 
-    //Edit Product
-    async getEditProduct(req, res) {
-        try {
-            const result = await Products.getEditProduct(req.body);
-
-            if (!result) {
-                return ResponseHandler.errorResponse(
-                    res,
-                    400,
-                    MSGConst.SOMETHING_WRONG,
-                    []
-                );
-            }
-            if (result) {
-                return ResponseHandler.successResponse(res, 200, "", result);
-            }
-        } catch (e) {
-            console.log(e);
-            ResponseHandler.errorResponse(
-                res,
-                400,
-                MSGConst.SOMETHING_WRONG,
-                []
-            );
-        }
+    // SIZE
+    if (req.body.size_id == 0 && req.body.size_val && req.body.size_val != "") {
+      const size_data = {
+        size: req.body.size_val,
+      };
+      const result = await Sizes.addSize(size_data, res);
+      size_insertId = result.insertId;
     }
 
-    // Add new Products.
-    async addProduct(req, res) {
-        let category_insertId = "";
-        let color_insertId = "";
-        let size_insertId = "";
-        let paper_type_insertId = "";
-        let marker_insertId = "";
+    // PAPER
+    if (
+      req.body.paper_type_id == 0 &&
+      req.body.paper_type &&
+      req.body.paper_type != ""
+    ) {
+      const paper_data = {
+        paper: req.body.paper_type,
+      };
+      const result = await Papers.addPaper(paper_data, res);
+      paper_type_insertId = result.insertId;
+    }
 
-        try {
-            // CATEGORIES
-            if (
-                req.body.category_id == 0 &&
-                req.body.category_name &&
-                req.body.category_name != ""
-            ) {
+    // MARKER
+
+    if (
+      req.body.marker_id == 0 &&
+      req.body.marker_val &&
+      req.body.marker_val != ""
+    ) {
+      const marker_data = {
+        marker: req.body.marker_val,
+      };
+      const result = await Markers.addMarker(marker_data, res);
+      marker_insertId = result.insertId;
+    }
+
+    const ids = {
+      category_insertId: category_insertId,
+      color_insertId: color_insertId,
+      size_insertId: size_insertId,
+      marker_insertId: marker_insertId,
+      paper_type_insertId: paper_type_insertId,
+    };
+    try {
+      req
+        .checkBody("product_name")
+        .notEmpty()
+        .withMessage("Please enter product name.");
+
+      req
+        .checkBody("category_id")
+        .notEmpty()
+        .withMessage("Please enter category id.")
+        .isInt()
+        .withMessage("Please enter valid category id.");
+
+      req
+        .checkBody("parent_category_id")
+        .notEmpty()
+        .withMessage("Please enter parent category id.")
+        .isInt()
+        .withMessage("Please enter valid parent category id.");
+
+      // req
+      //   .checkBody("color_id")
+      //   .notEmpty()
+      //   .withMessage("Please enter color id.")
+      //   .isInt()
+      //   .withMessage("Please enter valid color id.");
+
+      // req
+      //   .checkBody("size_id")
+      //   .notEmpty()
+      //   .withMessage("Please enter size id.")
+      //   .isInt()
+      //   .withMessage("Please enter valid size id.");
+
+      // req
+      //   .checkBody("paper_type_id")
+      //   .notEmpty()
+      //   .withMessage("Please enter paper type id.")
+      //   .isInt()
+      //   .withMessage("Please enter valid paper type id.");
+
+      // req
+      //   .checkBody("marker_id")
+      //   .notEmpty()
+      //   .withMessage("Please enter marker id.")
+      //   .isInt()
+      //   .withMessage("Please enter valid marker id.");
+
+      const errors = req.validationErrors();
+
+      if (errors) {
+        return ResponseHandler.errorResponse(
+          res,
+          400,
+          MSGConst.SOMETHING_WRONG,
+          errors
+        );
+      }
+
+      const result = await Products.updateProduct(
+        req.body,
+        req.params.id,
+        req.files,
+        ids
+      );
+
+      if (!result) {
+        return ResponseHandler.errorResponse(
+          res,
+          400,
+          MSGConst.SOMETHING_WRONG,
+          []
+        );
+      }
+      if (result) {
+        if (result[0]?.product_name === req.body.product_name) {
+          return ResponseHandler.errorResponse(
+            res,
+            400,
+            MSGConst.PRODUCT_EXIST
+          );
+        }
+        return ResponseHandler.successResponse(
+          res,
+          200,
+          MSGConst.PRODUCT_UPDATE,
+          []
+        );
+      }
+    } catch (e) {
+      console.log(e);
+      ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
+    }
+  }
+
+  // Delete product by its id.
+  async deleteProduct(req, res) {
+    try {
+      const result = await Products.deleteProduct(req.body.id);
+      if (!result) {
+        return ResponseHandler.errorResponse(
+          res,
+          400,
+          MSGConst.SOMETHING_WRONG,
+          []
+        );
+      }
+      if (result) {
+        return ResponseHandler.successResponse(
+          res,
+          200,
+          MSGConst.PRODUCT_DELETE,
+          []
+        );
+      }
+    } catch (e) {
+      console.log(e);
+      ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
+    }
+  }
+
+  //csv file upload
+
+  async importCsvFile(req, res) {
+
+    console.log("req.filereq.filereq.filereq.filereq.filereq.filereq.filereq.filereq.filereq.filereq.filereq.file",req.file)
+    // console.log("====================================>",req.file,req.body)
+    try {
+      const records = [];
+      if (req.file) {
+        const filePath = path.join(__dirname, "../assets/csvfiles");
+
+        fs.createReadStream(`${filePath}/${req.file.originalname}`)
+          .pipe(parse({ bom: false, columns: true }))
+          .on("data", async (data) => {
+            // console.log("data=========>", data);
+            records.push({
+              ...data,
+            });
+          })
+          .on("end", async () => {
+            try {
+              const record = records[0];
+
+              let parent_category_insertId = "";
+              let category_insertId = "";
+              let color_insertId = "";
+              let size_insertId = "";
+              let paper_type_insertId = "";
+              let marker_insertId = "";
+              let brands = [];
+              let brands_insertIds = [];
+
+              if (
+                record.parent_category_name &&
+                record.parent_category_name != ""
+              ) {
                 const data = {
-                    name: req.body.category_name,
-                    description: req.body.category_name,
-                    parent_id: req.body.parent_category_id,
+                  name: record.parent_category_name,
+                  description: record.parent_category_name,
+                  parent_id: 0,
                 };
                 const result = await categories.addCategory(data, res);
-                category_insertId = result.insertId;
-            }
 
-            // COLORS
-            if (
-                req.body.color_id == 0 &&
-                req.body.color_name &&
-                req.body.color_name != ""
-            ) {
-                const color_data = {
-                    color: req.body.color_name,
-                };
-                const result = await colors.addColor(color_data, res);
-                color_insertId = result.insertId;
-            }
+                parent_category_insertId = result.insertId
+                  ? result.insertId
+                  : result[0].id;
+                // parent_category_insertId = result[0].id;
 
-            // SIZE
+                // CHILD CATEGORY
 
-            if (
-                req.body.size_id == 0 &&
-                req.body.size_val &&
-                req.body.size_val != ""
-            ) {
+                if (
+                  record.category_name &&
+                  record.category_name != "" &&
+                  parent_category_insertId &&
+                  parent_category_insertId !== ""
+                ) {
+                  const data = {
+                    name: record.category_name,
+                    description: record.category_name,
+                    parent_id: parent_category_insertId,
+                  };
+                  const result = await categories.addCategory(data, res);
+                  category_insertId = result.insertId
+                    ? result.insertId
+                    : result[0].id;
+                }
+              }
+
+              //COLOR
+
+              if (record.color && record.color !== "") {
+                {
+                  const color_data = {
+                    color: record.color,
+                  };
+                  const result = await colors.addColor(color_data, res);
+                  color_insertId = result.insertId
+                    ? result.insertId
+                    : result[0].id;
+                  console.log("color -iddwdadds", result);
+                }
+              }
+              //SIZE
+
+              if (record.size_val && record.size_val !== "") {
                 const size_data = {
-                    size: req.body.size_val,
+                  size: record.size_val,
                 };
                 const result = await Sizes.addSize(size_data, res);
-                size_insertId = result.insertId;
-            }
+                size_insertId = result.insertId
+                  ? result.insertId
+                  : result[0].id;
+                console.log("size -iddwdadds", result);
+              }
 
-            // PAPER
-            if (
-                req.body.paper_type_id == 0 &&
-                req.body.paper_type &&
-                req.body.paper_type != ""
-            ) {
+              //PAPER
+
+              if (record.paper_type && record.paper_type !== "") {
                 const paper_data = {
-                    paper: req.body.paper_type,
+                  paper: record.paper_type,
                 };
                 const result = await Papers.addPaper(paper_data, res);
-                paper_type_insertId = result.insertId;
-            }
+                paper_type_insertId = result.insertId
+                  ? result.insertId
+                  : result[0].id;
 
-            // MARKER
+                console.log("paper -iddwdadds", result);
+              }
 
-            if (
-                req.body.marker_id == 0 &&
-                req.body.marker_val &&
-                req.body.marker_val != ""
-            ) {
+              // marker
+              if (record.marker_val && record.marker_val !== "") {
                 const marker_data = {
-                    marker: req.body.marker_val,
+                  marker: record.marker_val,
                 };
                 const result = await Markers.addMarker(marker_data, res);
-                marker_insertId = result.insertId;
-            }
+                marker_insertId = result.insertId
+                  ? result.insertId
+                  : result[0].id;
 
-            const ids = {
-                category_insertId: category_insertId,
-                color_insertId: color_insertId,
-                size_insertId: size_insertId,
-                marker_insertId: marker_insertId,
-                paper_type_insertId: paper_type_insertId,
-            };
+                console.log("marker -iddwdadds", result);
+              }
 
-            // paper = ? LIMIT 1`,
-            // [input.paper]
+              //BRANDS
+              const brand_name_array = record.brand_name.split(",");
+              const brand_img_array = record.brandimg.split(",");
 
-            req.checkBody("product_name")
-                .notEmpty()
-                .withMessage("Please enter product name.");
+              const file = fs.createWriteStream(`uploads/${Date.now()}_brand_image.jpeg`);
+              
+              brand_img_array.map((val,ind)=>{              
+              const request = https.get(
+                val,
+                function (response) {
+                  response.pipe(file);
 
-            req.checkBody("category_id")
-                .notEmpty()
-                .withMessage("Please enter category id.")
-                .isInt()
-                .withMessage("Please enter valid category id.");
-
-            req.checkBody("parent_category_id")
-                .notEmpty()
-                .withMessage("Please enter parent category id.")
-                .isInt()
-                .withMessage("Please enter valid parent category id.");
-
-            // req
-            //   .checkBody("color_id")
-            //   .notEmpty()
-            //   .withMessage("Please enter color id.")
-            //   .isInt()
-            //   .withMessage("Please enter valid color id.");
-
-            // req
-            //   .checkBody("size_id")
-            //   .notEmpty()
-            //   .withMessage("Please enter size id.")
-            //   .isInt()
-            //   .withMessage("Please enter valid size id.");
-
-            // req
-            //   .checkBody("paper_type_id")
-            //   .notEmpty()
-            //   .withMessage("Please enter paper type id.")
-            //   .isInt()
-            //   .withMessage("Please enter valid paper type id.");
-
-            // req
-            //   .checkBody("marker_id")
-            //   .notEmpty()
-            //   .withMessage("Please enter marker id.")
-            //   .isInt()
-            //   .withMessage("Please enter valid marker id.");
-
-            const errors = req.validationErrors();
-            if (errors) {
-                return ResponseHandler.errorResponse(
-                    res,
-                    400,
-                    MSGConst.SOMETHING_WRONG,
-                    errors
-                );
-            }
-
-            const result = await Products.addProduct(req.body, req.files, ids);
-
-            if (!result) {
-                return ResponseHandler.errorResponse(
-                    res,
-                    400,
-                    MSGConst.SOMETHING_WRONG,
-                    []
-                );
-            }
-            if (result) {
-                if (result[0]?.product_name === req.body.product_name) {
-                    return ResponseHandler.errorResponse(
-                        res,
-                        400,
-                        MSGConst.PRODUCT_EXIST
-                    );
+                  // after download completed close filestream
+                  file.on("finish", () => {
+                    file.close();
+                    console.log("Download Completed");
+                  });
                 }
-                return ResponseHandler.successResponse(
-                    res,
-                    200,
-                    MSGConst.PRODUCT_ADD,
-                    []
-                );
-            }
-        } catch (e) {
-            console.log(e);
-            ResponseHandler.errorResponse(
-                res,
-                400,
-                MSGConst.SOMETHING_WRONG,
-                []
-            );
-        }
-    }
+              );
+            
+              brand_img_array[ind]=file.path.split("/")[1]
 
-    // Updating product by its id.
-    async updateProduct(req, res) {
-        let category_insertId = "";
-        let color_insertId = "";
-        let size_insertId = "";
-        let paper_type_insertId = "";
-        let marker_insertId = "";
+            })
 
-        if (
-            req.body.category_id == 0 &&
-            req.body.category_name &&
-            req.body.category_name != ""
-        ) {
-            const data = {
-                name: req.body.category_name,
-                description: req.body.category_name,
-                parent_id: req.body.parent_category_id,
-            };
-            const result = await categories.addCategory(data, res);
-            category_insertId = result.insertId;
-        }
+            console.log("brand_img_array",brand_img_array)
 
-        //COLOR
-        if (
-            req.body.color_id == 0 &&
-            req.body.color_name &&
-            req.body.color_name != ""
-        ) {
-            const color_data = {
-                color: req.body.color_name,
-            };
-            const result = await colors.addColor(color_data, res);
-            color_insertId = result.insertId;
-        }
 
-        // SIZE
-        if (
-            req.body.size_id == 0 &&
-            req.body.size_val &&
-            req.body.size_val != ""
-        ) {
-            const size_data = {
-                size: req.body.size_val,
-            };
-            const result = await Sizes.addSize(size_data, res);
-            size_insertId = result.insertId;
-        }
+            const Product_Img_file = fs.createWriteStream(`uploads/${Date.now()}_Product_image.jpeg`);
 
-        // PAPER
-        if (
-            req.body.paper_type_id == 0 &&
-            req.body.paper_type &&
-            req.body.paper_type != ""
-        ) {
-            const paper_data = {
-                paper: req.body.paper_type,
-            };
-            const result = await Papers.addPaper(paper_data, res);
-            paper_type_insertId = result.insertId;
-        }
 
-        // MARKER
+            const Product_request = https.get(
+             record.product_image,
+             function (response) {
+               response.pipe(Product_Img_file);
 
-        if (
-            req.body.marker_id == 0 &&
-            req.body.marker_val &&
-            req.body.marker_val != ""
-        ) {
-            const marker_data = {
-                marker: req.body.marker_val,
-            };
-            const result = await Markers.addMarker(marker_data, res);
-            marker_insertId = result.insertId;
-        }
+               // after download completed close filestream
+               Product_Img_file.on("finish", () => {
+                 Product_Img_file.close();
+                 console.log("Downloaded Product Completed");
+               });
+             }
 
-        const ids = {
-            category_insertId: category_insertId,
-            color_insertId: color_insertId,
-            size_insertId: size_insertId,
-            marker_insertId: marker_insertId,
-            paper_type_insertId: paper_type_insertId,
-        };
-        try {
-            req.checkBody("product_name")
-                .notEmpty()
-                .withMessage("Please enter product name.");
+           );
 
-            req.checkBody("category_id")
-                .notEmpty()
-                .withMessage("Please enter category id.")
-                .isInt()
-                .withMessage("Please enter valid category id.");
+           const product_image = Product_Img_file.path.split("/")[1]
 
-            req.checkBody("parent_category_id")
-                .notEmpty()
-                .withMessage("Please enter parent category id.")
-                .isInt()
-                .withMessage("Please enter valid parent category id.");
+           console.log("product_image",product_image)
 
-            // req
-            //   .checkBody("color_id")
-            //   .notEmpty()
-            //   .withMessage("Please enter color id.")
-            //   .isInt()
-            //   .withMessage("Please enter valid color id.");
 
-            // req
-            //   .checkBody("size_id")
-            //   .notEmpty()
-            //   .withMessage("Please enter size id.")
-            //   .isInt()
-            //   .withMessage("Please enter valid size id.");
 
-            // req
-            //   .checkBody("paper_type_id")
-            //   .notEmpty()
-            //   .withMessage("Please enter paper type id.")
-            //   .isInt()
-            //   .withMessage("Please enter valid paper type id.");
-
-            // req
-            //   .checkBody("marker_id")
-            //   .notEmpty()
-            //   .withMessage("Please enter marker id.")
-            //   .isInt()
-            //   .withMessage("Please enter valid marker id.");
-
-            const errors = req.validationErrors();
-
-            if (errors) {
-                return ResponseHandler.errorResponse(
-                    res,
-                    400,
-                    MSGConst.SOMETHING_WRONG,
-                    errors
-                );
-            }
-
-            const result = await Products.updateProduct(
-                req.body,
-                req.params.id,
-                req.files,
-                ids
-            );
-
-            if (!result) {
-                return ResponseHandler.errorResponse(
-                    res,
-                    400,
-                    MSGConst.SOMETHING_WRONG,
-                    []
-                );
-            }
-            if (result) {
-                if (result[0]?.product_name === req.body.product_name) {
-                    return ResponseHandler.errorResponse(
-                        res,
-                        400,
-                        MSGConst.PRODUCT_EXIST
-                    );
+              if (record.brand_name && record.brand_name !== "") {
+                let s = 0;
+                while (s < brand_name_array.length) {
+                  const brandsData = {
+                    name: brand_name_array[s],
+                    description: brand_name_array[s],
+                  };
+                  const result = await Brands.addBrand(brandsData, res);
+                  brands_insertIds.push(
+                    result.insertId ? result.insertId : result[0].id
+                  );
+                  s++;
                 }
-                return ResponseHandler.successResponse(
-                    res,
-                    200,
-                    MSGConst.PRODUCT_UPDATE,
-                    []
+              }
+
+              try {
+                const [rows_products, fields] = await connectPool.query(
+                  `SELECT product_name from products WHERE product_name = ? LIMIT 1`,
+                  [record.product_name]
                 );
-            }
-        } catch (e) {
-            console.log(e);
-            ResponseHandler.errorResponse(
+
+                if (rows_products.length === 0) {
+                  let productsData = {
+                    product_name: record.product_name,
+                    category_id: category_insertId,
+                    parent_category_id: parent_category_insertId,
+                    color_id: color_insertId,
+                    paper_type_id: paper_type_insertId,
+                    size_id: size_insertId,
+                    marker_id: marker_insertId,
+                    product_quantity: record?.product_quantity,
+                    SKU: record?.SKU,
+                    product_image:product_image ,
+                    show_on_home_page: "1",
+                  };
+
+                  const [rows, fields] = await connectPool.query(
+                    "INSERT INTO products set ? ",
+                    {
+                      ...productsData,
+                      created_at: getCurrentTime(),
+                    }
+                  );
+
+                  let j = 0;
+                  let brandsData = {};
+
+                  while (j < brands_insertIds.length) {
+                    if (brands_insertIds) {
+                      brandsData = {
+                        product_id: rows.insertId,
+                        brand_id: brands_insertIds[j],
+                        brandimg: brand_img_array[j],
+                        show_on_homepage: 1,
+                        created_at: getCurrentTime(),
+                      };
+                    }
+                    const [insert_status, fields2] = await connectPool.query(
+                      `INSERT into productBrands SET ?`,
+                      brandsData
+                    );
+                    j++;
+                  }
+
+                  return rows;
+                }
+
+                if (rows_products) {
+                  if (rows_products[0]?.product_name === record.product_name) {
+                    return ResponseHandler.errorResponse(
+                      res,
+                      400,
+                      MSGConst.PRODUCT_EXIST
+                    );
+                  } else {
+                    return ResponseHandler.successResponse(
+                      res,
+                      200,
+                      MSGConst.PRODUCT_ADD,
+                      rows_products
+                    );
+                  }
+                }
+                return rows_products;
+              } catch (e) {
+                console.log(e);
+                throw new Error(e);
+              }
+            } catch (e) {
+              console.log(e);
+              ResponseHandler.errorResponse(
                 res,
                 400,
                 MSGConst.SOMETHING_WRONG,
                 []
-            );
-        }
+              );
+            }
+          });
+      }
+    } catch (e) {
+      console.log(e);
+      ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
     }
+  }
+  async getProductBySlug(req, res) {
+    try {
+      const result = await Products.getProductBySlug(req.params.slug);
 
-    // Delete product by its id.
-    async deleteProduct(req, res) {
-        try {
-            const result = await Products.deleteProduct(req.body.id);
-            if (!result) {
-                return ResponseHandler.errorResponse(
-                    res,
-                    400,
-                    MSGConst.SOMETHING_WRONG,
-                    []
-                );
-            }
-            if (result) {
-                return ResponseHandler.successResponse(
-                    res,
-                    200,
-                    MSGConst.PRODUCT_DELETE,
-                    []
-                );
-            }
-        } catch (e) {
-            console.log(e);
-            ResponseHandler.errorResponse(
-                res,
-                400,
-                MSGConst.SOMETHING_WRONG,
-                []
-            );
-        }
+      if (!result) {
+        return ResponseHandler.errorResponse(
+          res,
+          400,
+          MSGConst.SOMETHING_WRONG,
+          []
+        );
+      }
+      if (result) {
+        return ResponseHandler.successResponse(res, 200, "", result);
+      }
+    } catch (e) {
+      console.log(e);
+      ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
     }
+  }
+  async getBrandProducts(req, res) {
+    try {
+      const result = await Products.getBrandProducts(
+        req.params.slug,
+        req.params.brand
+      );
 
-    //csv file upload
-
-    async importCsvFile(req, res) {
-        // console.log("====================================>",req.file,req.body)
-        try {
-            const records = [];
-            if (req.file) {
-                const filePath = path.join(__dirname, "../assets/csvfiles");
-
-                fs.createReadStream(`${filePath}/${req.file.originalname}`)
-                    .pipe(parse({ bom: false, columns: true }))
-                    .on("data", async (data) => {
-                        console.log("data=========>",data)
-                        records.push({
-                            ...data,
-                        });
-                    })
-                    .on("end", async () => {
-                        try {
-                            const record = records[0];
-
-                            let parent_category_insertId = "";
-                            let category_insertId = "";
-                            let color_insertId = "";
-                            let size_insertId = "";
-                            let paper_type_insertId = "";
-                            let marker_insertId = "";
-                            let brands = [];
-                            let brands_insertIds = [];
-
-                            if (
-                                record.parent_category_name &&
-                                record.parent_category_name != ""
-                            ) {
-                                const data = {
-                                    name: record.parent_category_name,
-                                    description: record.parent_category_name,
-                                    parent_id: 0,
-                                };
-                                const result = await categories.addCategory(
-                                    data,
-                                    res
-                                );
-
-                                parent_category_insertId = result.insertId
-                                    ? result.insertId
-                                    : result[0].id;
-                                // parent_category_insertId = result[0].id;
-
-                                // CHILD CATEGORY
-
-                                if (
-                                    record.category_name &&
-                                    record.category_name != "" &&
-                                    parent_category_insertId &&
-                                    parent_category_insertId !== ""
-                                ) {
-                                    const data = {
-                                        name: record.category_name,
-                                        description: record.category_name,
-                                        parent_id: parent_category_insertId,
-                                    };
-                                    const result = await categories.addCategory(
-                                        data,
-                                        res
-                                    );
-                                    category_insertId = result.insertId
-                                        ? result.insertId
-                                        : result[0].id;
-                                }
-                            }
-
-                            //COLOR
-
-                            if (record.color && record.color !== "") {
-                                {
-                                    const color_data = {
-                                        color: record.color,
-                                    };
-                                    const result = await colors.addColor(
-                                        color_data,
-                                        res
-                                    );
-                                    color_insertId = result.insertId
-                                        ? result.insertId
-                                        : result[0].id;
-                                    console.log("color -iddwdadds", result);
-                                }
-                            }
-                            //SIZE
-
-                            if (record.size_val && record.size_val !== "") {
-                                const size_data = {
-                                    size: record.size_val,
-                                };
-                                const result = await Sizes.addSize(
-                                    size_data,
-                                    res
-                                );
-                                size_insertId = result.insertId
-                                    ? result.insertId
-                                    : result[0].id;
-                                console.log("size -iddwdadds", result);
-                            }
-
-                            //PAPER
-
-                            if (record.paper_type && record.paper_type !== "") {
-                                const paper_data = {
-                                    paper: record.paper_type,
-                                };
-                                const result = await Papers.addPaper(
-                                    paper_data,
-                                    res
-                                );
-                                paper_type_insertId = result.insertId
-                                    ? result.insertId
-                                    : result[0].id;
-
-                                console.log("paper -iddwdadds", result);
-                            }
-
-                            // marker
-                            if (record.marker_val && record.marker_val !== "") {
-                                const marker_data = {
-                                    marker: record.marker_val,
-                                };
-                                const result = await Markers.addMarker(
-                                    marker_data,
-                                    res
-                                );
-                                marker_insertId = result.insertId
-                                    ? result.insertId
-                                    : result[0].id;
-
-                                console.log("marker -iddwdadds", result);
-                            }
-
-                            //BRANDS
-                            const brand_name_array =
-                                record.brand_name.split(",");
-                            const brand_img_array = 
-                                record.brandimg.split(",")
-
-                                console.log("brand_img_array==================>",brand_img_array)
-
-                            if (record.brand_name && record.brand_name !== "") {
-                                let s = 0;
-                                while (s < brand_name_array.length) {
-                                    const brandsData = {
-                                        name: brand_name_array[s],
-                                        description: brand_name_array[s],
-                                    };
-                                    const result = await Brands.addBrand(
-                                        brandsData,
-                                        res
-                                    );
-                                    brands_insertIds.push(
-                                        result.insertId
-                                            ? result.insertId
-                                            : result[0].id
-                                    );
-                                    s++;
-                                }
-                            }
-
-                            try {
-                                const [rows_products, fields] =
-                                    await connectPool.query(
-                                        `SELECT product_name from products WHERE product_name = ? LIMIT 1`,
-                                        [record.product_name]
-                                    );
-                               
-                                if (rows_products.length === 0) {
-                                    let productsData = {
-                                        product_name: record.product_name,
-
-                                        category_id: category_insertId,
-                                        parent_category_id:
-                                            parent_category_insertId,
-                                        color_id: color_insertId,
-                                        paper_type_id: paper_type_insertId,
-                                        size_id: size_insertId,
-                                        marker_id: marker_insertId,
-                                        product_quantity:
-                                            record?.product_quantity,
-                                        SKU: record?.SKU,
-                                        product_image: record.product_image,
-                                        show_on_home_page: "0",
-                                    };
-
-                                    const [rows, fields] =
-                                        await connectPool.query(
-                                            "INSERT INTO products set ? ",
-                                            {
-                                                ...productsData,
-                                                created_at: getCurrentTime(),
-                                            }
-                                        );
-
-                                    let j = 0;
-                                    let brandsData = {};
-                                   
-                                    while (j < brands_insertIds.length) {
-                                        if (brands_insertIds) {
-                                            brandsData = {
-                                                product_id: rows.insertId,
-                                                brand_id: brands_insertIds[j],
-                                                brandimg: brand_img_array[j],
-                                                show_on_homepage: 0,
-                                                created_at: getCurrentTime(),
-                                            };
-                                        }
-                                        const [insert_status, fields2] =
-                                            await connectPool.query(
-                                                `INSERT into productBrands SET ?`,
-                                                brandsData
-                                            );
-                                        j++;
-                                    }
-
-                                    return rows;
-                                }
-
-                                if (rows_products) {
-                                    if (
-                                        rows_products[0]?.product_name ===
-                                        record.product_name
-                                    ) {
-                                        return ResponseHandler.errorResponse(
-                                            res,
-                                            400,
-                                            MSGConst.PRODUCT_EXIST
-                                        );
-                                    } else {
-                                        return ResponseHandler.successResponse(
-                                            res,
-                                            200,
-                                            MSGConst.PRODUCT_ADD,
-                                            rows_products
-                                        );
-                                    }
-                                }
-                                return rows_products;
-                            } catch (e) {
-                                console.log(e);
-                                throw new Error(e);
-                            }
-                        } catch (e) {
-                            console.log(e);
-                            ResponseHandler.errorResponse(
-                                res,
-                                400,
-                                MSGConst.SOMETHING_WRONG,
-                                []
-                            );
-                        }
-                    });
-            }
-        } catch (e) {
-            console.log(e);
-            ResponseHandler.errorResponse(
-                res,
-                400,
-                MSGConst.SOMETHING_WRONG,
-                []
-            );
-        }
+      if (!result) {
+        return ResponseHandler.errorResponse(
+          res,
+          400,
+          MSGConst.SOMETHING_WRONG,
+          []
+        );
+      }
+      if (result) {
+        return ResponseHandler.successResponse(res, 200, "", result);
+      }
+    } catch (e) {
+      console.log(e);
+      ResponseHandler.errorResponse(res, 400, MSGConst.SOMETHING_WRONG, []);
     }
-    async getProductBySlug(req, res) {
-        try {
-            const result = await Products.getProductBySlug(req.params.slug);
-
-            if (!result) {
-                return ResponseHandler.errorResponse(
-                    res,
-                    400,
-                    MSGConst.SOMETHING_WRONG,
-                    []
-                );
-            }
-            if (result) {
-                return ResponseHandler.successResponse(res, 200, "", result);
-            }
-        } catch (e) {
-            console.log(e);
-            ResponseHandler.errorResponse(
-                res,
-                400,
-                MSGConst.SOMETHING_WRONG,
-                []
-            );
-        }
-    }
-    async getBrandProducts(req, res) {
-        try {
-            const result = await Products.getBrandProducts(
-                req.params.slug,
-                req.params.brand
-            );
-
-            if (!result) {
-                return ResponseHandler.errorResponse(
-                    res,
-                    400,
-                    MSGConst.SOMETHING_WRONG,
-                    []
-                );
-            }
-            if (result) {
-                return ResponseHandler.successResponse(res, 200, "", result);
-            }
-        } catch (e) {
-            console.log(e);
-            ResponseHandler.errorResponse(
-                res,
-                400,
-                MSGConst.SOMETHING_WRONG,
-                []
-            );
-        }
-    }
+  }
 }
 
 module.exports = new ProductsController();

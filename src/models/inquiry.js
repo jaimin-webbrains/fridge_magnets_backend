@@ -18,12 +18,15 @@ class Inquiry {
 
   // Add new inquiry.
   async addInquiry(input) {
+    console.log("input*********************",input)
     try { 
       const [rows, fields] = await connectPool.query(
         "INSERT INTO inquiry set ? ",
         { ...input, created_at: getCurrentTime() }
       );
+      console.log("rows=====================>>>>>>>>>>>",rows)
       return rows;
+
     } catch (e) {
       console.log(e);
       throw new Error(e);

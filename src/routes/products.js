@@ -34,6 +34,6 @@ router.put(
 );
 router.delete("/products/delete", auth, ProductsController.deleteProduct);
 
-router.post("/products/importfile",uploadImages ,ProductsController.importCsvFile);
+router.post("/products/importfile", auth ,uploadImages ,ProductsController.importCsvFile);
 
 module.exports = router;

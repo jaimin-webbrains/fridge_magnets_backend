@@ -20,6 +20,7 @@ const UserLoginRoutes = require("./routes/Userlogin");
 const contactus = require("./routes/contactus");
 
 const path = require("path");
+const faqs = require("./routes/faqs");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -64,6 +65,7 @@ app.use(InquiryRoutes);
 app.use(GalleryRoutes);
 app.use(UserLoginRoutes);
 app.use(contactus);
+app.use(faqs)
 
 // app.use(productBrandsRoutes);
 

@@ -101,6 +101,7 @@ class CategoriesController {
         .withMessage("Please enter parent category.")
         .isInt()
         .withMessage("Please enter valid parent category.");
+        
       const errors = req.validationErrors();
       if (errors) {
         return ResponseHandler.errorResponse(
