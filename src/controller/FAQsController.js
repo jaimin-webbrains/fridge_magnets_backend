@@ -111,7 +111,7 @@ class FAQsController {
                 return ResponseHandler.successResponse(
                     res,
                     200,
-                    MSGConst.FAQS_ADD,
+                    MSGConst.FAQ_ADD,
                     []
                 );
             }
@@ -172,13 +172,13 @@ class FAQsController {
                     return ResponseHandler.errorResponse(
                         res,
                         400,
-                        MSGConst.FAQS_EXIST
+                        MSGConst.FAQ_EXIST
                     );
                 }
                 return ResponseHandler.successResponse(
                     res,
                     200,
-                    MSGConst.FAQS_UPDATE,
+                    MSGConst.FAQ_UPDATE,
                     []
                 );
             }

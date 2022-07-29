@@ -1,6 +1,11 @@
 module.exports.SUCCESS = "Success";
 module.exports.SOMETHING_WRONG = "Something Went Wrong";
 
+module.exports.FAQ_EXIST = "FAQ Already Exist ";
+module.exports.FAQ_ADD = "FAQ Added ";
+module.exports.FAQ_UPDATE = "FAQ Updated ";
+module.exports.FAQ_DELETE = "FAQ is Deleted";
+
 module.exports.CATEGORY_EXIST = "Category Already Exist ";
 module.exports.CATEGORY_ADD = "Category is Added ";
 module.exports.CATEGORY_UPDATE = "Category is Updated ";
