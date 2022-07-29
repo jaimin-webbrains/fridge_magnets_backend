@@ -18,6 +18,7 @@ const InquiryRoutes = require("./routes/inquiry");
 const GalleryRoutes = require("./routes/gallerys");
 const UserLoginRoutes = require("./routes/Userlogin");
 const contactus = require("./routes/contactus");
+const artwork = require("./routes/artwork");
 
 const path = require("path");
 
@@ -27,28 +28,28 @@ app.use(expressValidator());
 app.use(cors());
 app.use("/uploads", express.static(__dirname.replace("/src", "") + "/uploads"));
 app.use(
-    "/CSV_Files",
-    express.static(__dirname.replace("/src", "") + "/CSV_Files")
+  "/CSV_Files",
+  express.static(__dirname.replace("/src", "") + "/CSV_Files")
 );
 
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept"
-    );
-    next();
+  res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
 });
 app.use(
-    express.json({
-        // We need the raw body to verify webhook signatures.
-        // Let's compute it only when hitting the Stripe webhook endpoint.
-        verify: function (req, res, buf) {
-            if (req.originalUrl.startsWith("/webhook")) {
-                req.rawBody = buf.toString();
-            }
-        },
-    })
+  express.json({
+    // We need the raw body to verify webhook signatures.
+    // Let's compute it only when hitting the Stripe webhook endpoint.
+    verify: function (req, res, buf) {
+      if (req.originalUrl.startsWith("/webhook")) {
+        req.rawBody = buf.toString();
+      }
+    },
+  })
 );
 app.use(MigrationRoutes);
 app.use(CategoriesRoutes);
@@ -64,13 +65,14 @@ app.use(InquiryRoutes);
 app.use(GalleryRoutes);
 app.use(UserLoginRoutes);
 app.use(contactus);
+app.use(artwork);
 
 // app.use(productBrandsRoutes);
 
 app.use("/", express.static(__dirname.replace("/src", "") + "/Public"));
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname.replace("/src", ""), "Public/index.html"));
+  res.sendFile(path.join(__dirname.replace("/src", ""), "Public/index.html"));
 });
 app.listen(port, () => {
-    console.log("server is up on port " + port);
+  console.log("server is up on port " + port);
 });

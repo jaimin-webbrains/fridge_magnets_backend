@@ -6,13 +6,13 @@ const multerStorage = multer.diskStorage({
     if (
       file.fieldname === "logo" ||
       file.fieldname === "news_image" ||
+      file.fieldname === "file" ||
       //   file.fieldname === "customer_files" ||
       //   file.fieldname === "customer_images" ||
       //   file.fieldname === "customer_docs"||
       file.fieldname === "brand_image" ||
-      file.fieldname === "product_image"||
-        file.fieldname === "product_Images"
-
+      file.fieldname === "product_image" ||
+      file.fieldname === "product_Images"
     ) {
       if (!fs.existsSync(process.env.UPLOAD_DIR)) {
         fs.mkdirSync(process.env.UPLOAD_DIR);
@@ -72,7 +72,6 @@ exports.upload = multer({
       }
     }
 
-
     if (file.fieldname === "product_image") {
       if (
         file.mimetype == "image/png" ||
@@ -90,6 +89,18 @@ exports.upload = multer({
         file.mimetype == "image/png" ||
         file.mimetype == "image/jpg" ||
         file.mimetype == "image/jpeg"
+      ) {
+        cb(null, true);
+      } else {
+        return cb(null, false);
+      }
+    }
+    if (file.fieldname === "file") {
+      if (
+        file.mimetype == "image/png" ||
+        file.mimetype == "image/jpg" ||
+        file.mimetype == "image/jpeg" ||
+        file.mimetype == "application/pdf"
       ) {
         cb(null, true);
       } else {
