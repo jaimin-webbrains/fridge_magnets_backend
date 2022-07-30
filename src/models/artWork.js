@@ -1,16 +1,16 @@
 const { getCurrentTime } = require("../helpers/helpers");
 
-class Setting {
+class ArtWork {
   constructor() {}
 
   // Fetching all settings.
 
-  async getSetting() {
+  async getArtwork() {
     try {
       const [rows_settings, fields] = await connectPool.query(
-        `SELECT * FROM setting`
+        `SELECT * FROM artwork`
       );
-
+      console.log("jgghgj", rows_settings);
       return rows_settings;
     } catch (e) {
       console.log(e);
@@ -39,33 +39,27 @@ class Setting {
   // }
 
   // Updating setting by its id.
-  async updateSetting(input, filename) {
+  async updateArtwork(input, filename) {
     try {
       const [rows_settings, fields] = await connectPool.query(
-        `SELECT * from setting LIMIT 1`
+        `SELECT * from artwork LIMIT 1`
       );
       if (rows_settings.length === 1) {
         const [check_settings, fields] = await connectPool.query(
-          `SELECT * from setting LIMIT 1`
+          `SELECT * from artwork LIMIT 1`
         );
+
+        const ans = filename.map((x) => x.filename);
+        console.log(ans, "filename");
+        console.log(check_settings);
         if (check_settings.length === 1) {
           const [rows, updateFields] = await connectPool.query(
-            `UPDATE setting SET
-                    phone_no = ?,
-                    email = ?,
-                    logo=?,
-                    artwork_label1=?,
-                    artwork_label2=?,
+            `UPDATE artwork SET
+                    file = ?,
+                    description=?,
                     updated_at = ?
                    `,
-            [
-              input.phone_no,
-              input.email,
-              filename,
-              input.artwork_label1,
-              input.artwork_label2,
-              getCurrentTime(),
-            ]
+            [ans.toString(), input.description, getCurrentTime()]
           );
           return rows;
         }
@@ -102,4 +96,4 @@ class Setting {
   // }
 }
 
-module.exports = new Setting();
+module.exports = new ArtWork();

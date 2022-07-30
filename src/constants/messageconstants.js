@@ -54,6 +54,7 @@ module.exports.LOGIN_FAILED = "Password or Email is Incorrect";
 module.exports.LOGIN_FAIL = "Plese login again";
 
 module.exports.SETTING_UPDATE = "Setting is Updated ";
+module.exports.ARTWORK_UPDATE = "Artwork is Updated ";
 
 module.exports.INQUIRY_ADD = "Inquiry is Added ";
 

@@ -18,6 +18,7 @@ const InquiryRoutes = require("./routes/inquiry");
 const GalleryRoutes = require("./routes/gallerys");
 const UserLoginRoutes = require("./routes/Userlogin");
 const contactus = require("./routes/contactus");
+const artwork = require("./routes/artwork");
 
 const path = require("path");
 const faqs = require("./routes/faqs");
@@ -65,7 +66,8 @@ app.use(InquiryRoutes);
 app.use(GalleryRoutes);
 app.use(UserLoginRoutes);
 app.use(contactus);
-app.use(faqs)
+app.use(faqs);
+app.use(artwork);
 
 // app.use(productBrandsRoutes);
 
