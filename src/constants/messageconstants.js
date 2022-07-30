@@ -55,6 +55,7 @@ module.exports.LOGIN_FAIL = "Plese login again";
 
 module.exports.SETTING_UPDATE = "Setting is Updated ";
 module.exports.ARTWORK_UPDATE = "Artwork is Updated ";
+module.exports.ABOUTUS_UPDATE = "About us is Updated ";
 
 module.exports.INQUIRY_ADD = "Inquiry is Added ";
 

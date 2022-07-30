@@ -19,6 +19,7 @@ const AlterBrandTable = require("./AlterBrandTable");
 const AlterInquiryTable = require("./AlterInquiryTable");
 const CreateFAQTable = require("./CreateFAQTable");
 const CreateArtWorkTable = require("./CreateArtWorkTable");
+const AlterSettingTable = require("./AlterSettingTable");
 
 class Migrations {
     constructor() {}
@@ -45,6 +46,7 @@ class Migrations {
         await CreateUserLoginTable.create();
         await CreateArtWorkTable.create();
         await CreateFAQTable.create();
+        await AlterSettingTable.alter();
         res.send(["Migrated"]);
     }
 }
