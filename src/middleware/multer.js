@@ -6,12 +6,9 @@ const multerStorage = multer.diskStorage({
     if (
       file.fieldname === "logo" ||
       file.fieldname === "news_image" ||
-      //   file.fieldname === "customer_files" ||
-      //   file.fieldname === "customer_images" ||
-      //   file.fieldname === "customer_docs"||
       file.fieldname === "brand_image" ||
       file.fieldname === "product_image"||
-        file.fieldname === "product_Images"
+      file.fieldname === "product_Images"
 
     ) {
       if (!fs.existsSync(process.env.UPLOAD_DIR)) {

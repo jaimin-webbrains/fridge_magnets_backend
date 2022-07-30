@@ -26,7 +26,6 @@ class InquiryController {
     }
   }
   async addInquiry(req, res) {
-    console.log(req.body);
     try {
       req.checkBody("name").notEmpty().withMessage("Please enter name.");
       req
