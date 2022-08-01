@@ -465,7 +465,6 @@ class ProductsController {
   async importCsvFile(req, res) {
 
     console.log("req.filereq.filereq.filereq.filereq.filereq.filereq.filereq.filereq.filereq.filereq.filereq.file",req.file)
-    // console.log("====================================>",req.file,req.body)
     try {
       const records = [];
       if (req.file) {

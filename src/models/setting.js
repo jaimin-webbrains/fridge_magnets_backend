@@ -105,8 +105,7 @@ class Setting {
             const [rows_settings, fields] = await connectPool.query(
                 `SELECT * from setting LIMIT 1`
             );
-            console.log(rows_settings);
-            console.log(input);
+           
             if (rows_settings.length === 1) {
                 const [rows, updateFields] = await connectPool.query(
                     `UPDATE setting SET
@@ -115,7 +114,7 @@ class Setting {
                    `,
                     [input.aboutus, getCurrentTime()]
                 );
-                console.log(rows);
+            
                 return rows;
             }
 

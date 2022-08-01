@@ -108,10 +108,9 @@ class Products {
   // Add new Products.
   async addProduct(input, filesArr, ids) {
     try {
-      // const ans=ids.category_insertId?ids.category_insertId:input.category_id
       const [rows_products, fields] = await connectPool.query(
-        `SELECT product_name from products WHERE product_name = ?  LIMIT 1`,
-        [input.product_name]
+        `SELECT product_name from products WHERE product_name = ? and category_id = ?  LIMIT 1`,
+        [input.product_name, input?.category_id || ids.category_insertId]
       );
 
       if (rows_products.length === 0) {
@@ -185,8 +184,8 @@ class Products {
 
       if (rows_products.length === 1) {
         const [rows_products_exist, fields_exist] = await connectPool.query(
-          `SELECT product_name from products WHERE product_name = '${input.product_name}' and id != ? LIMIT 1`,
-          [id]
+          `SELECT product_name from products WHERE product_name = '${input.product_name}' and category_id =? and id != ? LIMIT 1`,
+          [ids.category_insertId || input.category_id, id]
         );
         if (rows_products_exist.length === 1) {
           return rows_products_exist;
